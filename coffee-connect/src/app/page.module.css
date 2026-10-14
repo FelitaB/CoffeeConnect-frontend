@@ -1,0 +1,165 @@
+.page {
+  --ink: #1f3028;
+  --muted: #58675e;
+  --line: #d5ddd6;
+  --paper: #fbfcf9;
+  min-height: 100vh;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.5;
+}
+
+.header {
+  color: #fff;
+  background: #215c44;
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1.25rem 2rem;
+}
+
+.headerInner p {
+  margin: 0;
+  color: #e1eee5;
+  font-family: Arial, sans-serif;
+  font-size: 0.9rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.brandMark {
+  display: grid;
+  width: 2rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid #c8dfcf;
+  border-radius: 50%;
+  color: #e5f2e8;
+  font-family: Arial, sans-serif;
+  font-size: 0.9rem;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: min(100% - 4rem, 68rem);
+  margin: 0 auto;
+  padding: 3.5rem 0;
+}
+
+.registration {
+  width: min(100%, 36rem);
+  min-width: 0;
+  margin: 0 auto;
+}
+
+.registration h2 {
+  margin: 0;
+  font-size: 1.65rem;
+}
+
+.registrationIntro {
+  margin: 0.4rem 0 1.25rem;
+  color: var(--muted);
+}
+
+.registration form {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.field label {
+  font-family: Arial, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.field input {
+  width: 100%;
+  min-height: 2.8rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #aab8ae;
+  border-radius: 3px;
+  color: var(--ink);
+  background: #fff;
+  font: 1rem Arial, sans-serif;
+}
+
+.field input:focus-visible,
+.submit:focus-visible,
+.brand:focus-visible {
+  outline: 3px solid #d69a4c;
+  outline-offset: 2px;
+}
+
+.field input[aria-invalid="true"] {
+  border-color: #a33b31;
+}
+
+.warning,
+.status {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  font-size: 0.9rem;
+}
+
+.warning {
+  color: #8c2f26;
+}
+
+.status {
+  color: #285c3e;
+}
+
+.submit {
+  min-height: 2.9rem;
+  padding: 0.65rem 1rem;
+  border: 0;
+  border-radius: 3px;
+  color: #fff;
+  background: #215c44;
+  font: 700 0.95rem Arial, sans-serif;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: #174832;
+}
+
+@media (max-width: 767px) {
+  .headerInner {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 1rem 1.25rem;
+  }
+
+  .main {
+    grid-template-columns: minmax(0, 1fr);
+    width: min(100% - 2.5rem, 42rem);
+    padding: 2rem 0;
+  }
+
+  .registration {
+    padding: 0;
+  }
+}
