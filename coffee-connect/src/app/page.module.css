@@ -6,7 +6,7 @@
   min-height: 100vh;
   color: var(--ink);
   background: var(--paper);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-geist-sans, sans-serif);
   line-height: 1.5;
 }
 
@@ -94,7 +94,8 @@
   font-weight: 700;
 }
 
-.field input {
+.field input,
+.field select {
   width: 100%;
   min-height: 2.8rem;
   padding: 0.55rem 0.7rem;
@@ -106,13 +107,15 @@
 }
 
 .field input:focus-visible,
+.field select:focus-visible,
 .submit:focus-visible,
 .brand:focus-visible {
   outline: 3px solid #d69a4c;
   outline-offset: 2px;
 }
 
-.field input[aria-invalid="true"] {
+.field input[aria-invalid="true"],
+.field select[aria-invalid="true"] {
   border-color: #a33b31;
 }
 

@@ -49,7 +49,7 @@ export default function Home() {
       } else if (!validPassword) {
         passwordInput.focus();
       } else {
-        form.querySelector<HTMLInputElement>(":invalid")?.focus();
+        form.querySelector<HTMLInputElement | HTMLSelectElement>(":invalid")?.focus();
       }
       return;
     }
@@ -98,7 +98,13 @@ export default function Home() {
             </div>
             <div className={styles.field}>
               <label htmlFor="location">Location</label>
-              <input id="location" name="location" required />
+              <select id="location" name="location" defaultValue="" required>
+                <option value="" disabled>Select your location</option>
+                <option value="London">London Office</option>
+                <option value="Manchester">Manchester Office</option>
+                <option value="Belfast">Belfast Office</option>
+                <option value="Remote">Remote</option>
+              </select>
             </div>
             <div className={styles.field}>
               <label htmlFor="password">Password</label>
