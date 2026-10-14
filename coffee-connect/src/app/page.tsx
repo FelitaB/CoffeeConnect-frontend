@@ -1,18 +1,18 @@
 "use client";
 
 import { type FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 
 export default function Home() {
+  const router = useRouter();
   const [warning, setWarning] = useState("");
-  const [status, setStatus] = useState("");
   const [emailInvalid, setEmailInvalid] = useState(false);
   const [passwordInvalid, setPasswordInvalid] = useState(false);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setWarning("");
-    setStatus("");
 
     const form = event.currentTarget;
     const emailInput = form.querySelector<HTMLInputElement>("#email");
@@ -54,7 +54,7 @@ export default function Home() {
       return;
     }
 
-    setStatus("Details are valid. Registration is not connected yet.");
+    router.push("/interests");
   }
 
   return (
@@ -73,7 +73,7 @@ export default function Home() {
         <section className={styles.registration} aria-labelledby="registration-heading">
           <h2 id="registration-heading">Register</h2>
           <p className={styles.registrationIntro}>
-            Save your place for Coffee &amp; Co-working Morning.
+            Create your profile to find colleagues with shared interests.
           </p>
           <form id="registration-form" noValidate onSubmit={handleSubmit}>
             <div className={styles.field}>
@@ -127,9 +127,8 @@ export default function Home() {
             >
               {warning}
             </p>
-            <p className={styles.status} role="status">{status}</p>
             <button className={styles.submit} type="submit">
-              Register for event
+              Continue to interests
             </button>
           </form>
         </section>
