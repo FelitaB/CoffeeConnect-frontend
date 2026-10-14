@@ -194,7 +194,7 @@ export default function InterestsPage() {
               Save draft
             </button>
           </form>
-          <Link className={styles.backLink} href="/">Back to registration</Link>
+          <Link className={styles.backLink} href="/register">Back to registration</Link>
         </section>
       </main>
     </div>
