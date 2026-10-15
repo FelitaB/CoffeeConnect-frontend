@@ -1,8 +1,9 @@
 .page {
-  --ink: #1f3028;
-  --muted: #58675e;
-  --line: #d5ddd6;
-  --paper: #fbfcf9;
+  --ink: #17202b;
+  --muted: #586577;
+  --line: #d5dce6;
+  --paper: #f4f6f9;
+  --accent: #1683f5;
   min-height: 100vh;
   color: var(--ink);
   background: var(--paper);
@@ -12,7 +13,7 @@
 
 .header {
   color: #fff;
-  background: #215c44;
+  background: #080d15;
 }
 
 .headerInner {
@@ -27,9 +28,16 @@
 
 .headerInner p {
   margin: 0;
-  color: #e1eee5;
+  color: #c6cfdd;
   font-family: Arial, sans-serif;
   font-size: 0.9rem;
+}
+
+.headerUtility {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.5rem;
 }
 
 .brand {
@@ -47,11 +55,26 @@
   width: 2rem;
   aspect-ratio: 1;
   place-items: center;
-  border: 1px solid #c8dfcf;
+  border: 1px solid #6baeff;
   border-radius: 50%;
-  color: #e5f2e8;
+  color: #fff;
   font-family: Arial, sans-serif;
   font-size: 0.9rem;
+}
+
+.companyLogo {
+  flex: none;
+  width: 160px;
+  height: 58px;
+  overflow: hidden;
+}
+
+.companyLogoImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .main {
@@ -84,17 +107,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #215c44;
+  border: 1px solid var(--accent);
   text-decoration: none;
 }
 
 .homeActions a:last-child {
-  color: #215c44;
+  color: #145caf;
   background: transparent;
 }
 
 .homeActions a:last-child:hover {
-  background: #f0f5f1;
+  background: #e9f3ff;
 }
 
 .registrationIntro {
@@ -140,7 +163,7 @@
 .field select:focus-visible,
 .submit:focus-visible,
 .brand:focus-visible {
-  outline: 3px solid #d69a4c;
+  outline: 3px solid #1683f5;
   outline-offset: 2px;
 }
 
@@ -186,7 +209,7 @@
 .interestSummary:focus-visible,
 .interestOption input:focus-visible,
 .backLink:focus-visible {
-  outline: 3px solid #d69a4c;
+  outline: 3px solid #1683f5;
   outline-offset: 2px;
 }
 
@@ -218,13 +241,13 @@
 }
 
 .interestOption:hover {
-  background: #f0f5f1;
+  background: #e9f3ff;
 }
 
 .interestOption input {
   width: 1rem;
   height: 1rem;
-  accent-color: #215c44;
+  accent-color: #1683f5;
 }
 
 .interestOption input:disabled {
@@ -245,7 +268,7 @@
 .backLink {
   display: inline-block;
   margin-top: 1rem;
-  color: #215c44;
+  color: #145caf;
   font-family: Arial, sans-serif;
   font-weight: 700;
   text-decoration-thickness: 1px;
@@ -264,7 +287,7 @@
 }
 
 .status {
-  color: #285c3e;
+  color: #145caf;
 }
 
 .submit {
@@ -273,13 +296,13 @@
   border: 0;
   border-radius: 3px;
   color: #fff;
-  background: #215c44;
+  background: #146ed1;
   font: 700 0.95rem Arial, sans-serif;
   cursor: pointer;
 }
 
 .submit:hover {
-  background: #174832;
+  background: #0d54a5;
 }
 
 @media (max-width: 767px) {
@@ -287,6 +310,11 @@
     align-items: flex-start;
     flex-direction: column;
     padding: 1rem 1.25rem;
+  }
+
+  .headerUtility {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .main {
@@ -297,5 +325,56 @@
 
   .registration {
     padding: 0;
+  }
+}
+
+.meetupList {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.meetupItem {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: #fff;
+}
+
+.meetupName {
+  margin: 0;
+  font-size: 16px;
+}
+
+.meetupMeta {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+.meetupStatus {
+  justify-self: end;
+  padding: 3px 7px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: #e9f3ff;
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+@media (max-width: 576px) {
+  .meetupItem {
+    grid-template-columns: 1fr;
+  }
+
+  .meetupStatus {
+    justify-self: start;
   }
 }

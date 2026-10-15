@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import CompanyLogo from "../company-logo";
 import styles from "../page.module.css";
 
 export default function RegisterPage() {
@@ -66,7 +67,10 @@ export default function RegisterPage() {
             <span className={styles.brandMark} aria-hidden="true">C</span>
             <span>CoffeeConnect</span>
           </Link>
-          <p>Internal desk booking dashboard</p>
+          <div className={styles.headerUtility}>
+            <p>Internal desk booking dashboard</p>
+            <CompanyLogo />
+          </div>
         </div>
       </header>
 
