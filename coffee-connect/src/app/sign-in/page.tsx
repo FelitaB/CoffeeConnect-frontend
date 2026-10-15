@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
+import CompanyLogo from "../company-logo";
 import styles from "../page.module.css";
 
 export default function SignInPage() {
+  const router = useRouter();
   const [warning, setWarning] = useState("");
-  const [status, setStatus] = useState("");
   const [emailInvalid, setEmailInvalid] = useState(false);
   const [passwordInvalid, setPasswordInvalid] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -14,7 +16,6 @@ export default function SignInPage() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setWarning("");
-    setStatus("");
 
     const form = event.currentTarget;
     const emailInput = form.querySelector<HTMLInputElement>("#sign-in-email");
@@ -53,12 +54,11 @@ export default function SignInPage() {
 
     passwordInput.value = "";
     setShowPassword(false);
-    setStatus("Sign-in is not connected yet. No credentials were sent or saved.");
+    router.push("/meetups");
   }
 
   function clearFeedback() {
     setWarning("");
-    setStatus("");
     setEmailInvalid(false);
     setPasswordInvalid(false);
   }
@@ -71,7 +71,10 @@ export default function SignInPage() {
             <span className={styles.brandMark} aria-hidden="true">C</span>
             <span>CoffeeConnect</span>
           </Link>
-          <p>Internal desk booking dashboard</p>
+          <div className={styles.headerUtility}>
+            <p>Internal desk booking dashboard</p>
+            <CompanyLogo />
+          </div>
         </div>
       </header>
 
@@ -80,6 +83,9 @@ export default function SignInPage() {
           <h2 id="sign-in-heading">Sign in</h2>
           <p className={styles.registrationIntro}>
             Welcome back to CoffeeConnect.
+          </p>
+          <p className={styles.status} role="status">
+            Demo only: sign-in is not connected. A valid work email and non-empty password will open the sample meetups.
           </p>
           <form noValidate onSubmit={handleSubmit}>
             <div className={styles.field}>
@@ -122,7 +128,6 @@ export default function SignInPage() {
             <p className={styles.warning} id="sign-in-warning" role="alert" hidden={!warning}>
               {warning}
             </p>
-            <p className={styles.status} role="status">{status}</p>
             <button className={styles.submit} type="submit">Sign in</button>
           </form>
           <Link className={styles.backLink} href="/register">Create an account</Link>
