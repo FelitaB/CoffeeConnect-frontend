@@ -101,10 +101,9 @@ export default function RegisterPage() {
               <label htmlFor="location">Location</label>
               <select id="location" name="location" defaultValue="" required>
                 <option value="" disabled>Select your location</option>
-                <option value="London">London Office</option>
-                <option value="Manchester">Manchester Office</option>
-                <option value="Belfast">Belfast Office</option>
-                <option value="Remote">Remote</option>
+                <option value="LONDON">London Office</option>
+                <option value="MANCHESTER">Manchester Office</option>
+                <option value="BELFAST">Belfast Office</option>
               </select>
             </div>
             <div className={styles.field}>
