@@ -20,6 +20,19 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Page Routes
+
+- `/`: Homepage with sign-in and registration choices.
+- `/sign-in`: Offline sign-in form, with a link to registration.
+- `/register`: Registration form; valid inputs continue to `/interests` without creating an account yet.
+- `/interests`: Offline interest selection, with a link back to `/register`.
+
+The CoffeeConnect brand link on each page returns to `/`.
+
+## Offline Sign-In Prototype
+
+The `/sign-in` page validates a PA work email and a nonempty password locally. It does not authenticate users, create a session, or make API requests. Valid submission clears the password and displays an explicit offline status; credentials are not saved to browser storage. Authentication and password recovery need an agreed backend contract before integration.
+
 ## Offline Interests Prototype
 
 The `/interests` page loads local mock objects in `useEffect`; it makes no API requests and does not connect to MySQL. The provisional object shape is `{ interest_id: number, name: string }`. All mock IDs are placeholders, not database IDs.
