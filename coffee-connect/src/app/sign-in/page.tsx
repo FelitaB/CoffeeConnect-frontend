@@ -4,6 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
+import CompanyLogo from "../company-logo";
 import { checkEmail, login, storePerson } from "@/lib/api";
 import styles from "../page.module.css";
 
@@ -26,6 +27,13 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setWarning("");
+
+    const form = event.currentTarget;
+    const emailInput = form.querySelector<HTMLInputElement>("#sign-in-email");
+    const passwordInput = form.querySelector<HTMLInputElement>("#sign-in-password");
   async function handleEmailSubmit() {
     const trimmedEmail = email.trim();
     setEmail(trimmedEmail);
@@ -82,6 +90,10 @@ export default function SignInPage() {
     } finally {
       setSubmitting(false);
     }
+
+    passwordInput.value = "";
+    setShowPassword(false);
+    router.push("/meetups");
   }
 
   function changeEmail() {
@@ -89,6 +101,7 @@ export default function SignInPage() {
     setPassword("");
     setShowPassword(false);
     setWarning("");
+    setEmailInvalid(false);
     setPasswordInvalid(false);
   }
 
@@ -100,7 +113,10 @@ export default function SignInPage() {
             <span className={styles.brandMark} aria-hidden="true">C</span>
             <span>CoffeeConnect</span>
           </Link>
-          <p>Internal desk booking dashboard</p>
+          <div className={styles.headerUtility}>
+            <p>Internal desk booking dashboard</p>
+            <CompanyLogo />
+          </div>
         </div>
       </header>
 
@@ -109,6 +125,9 @@ export default function SignInPage() {
           <h2 id="sign-in-heading">Sign in</h2>
           <p className={styles.registrationIntro}>
             {step === "email" ? "Welcome back to CoffeeConnect." : `Signing in as ${email}`}
+          </p>
+          <p className={styles.status} role="status">
+            Demo only: sign-in is not connected. A valid work email and non-empty password will open the sample meetups.
           </p>
           <form noValidate onSubmit={handleSubmit}>
             {step === "email" ? (
