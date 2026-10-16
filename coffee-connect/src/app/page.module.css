@@ -288,6 +288,15 @@
   text-underline-offset: 0.2em;
 }
 
+button.backLink {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .warning,
 .status {
   margin: 0;
