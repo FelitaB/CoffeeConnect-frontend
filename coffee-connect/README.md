@@ -23,15 +23,21 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 ## Page Routes
 
 - `/`: Homepage with sign-in and registration choices.
-- `/sign-in`: Offline sign-in form, with a link to registration.
+- `/sign-in`: Two-step sign-in (email, then password), with a link to registration.
+- `/setup-existing-user`: Placeholder for people whose account is not registered yet.
+- `/home`: Placeholder landing page after a successful sign-in.
 - `/register`: Registration form; valid inputs continue to `/interests` without creating an account yet.
 - `/interests`: Offline interest selection, with a link back to `/register`.
 
 The CoffeeConnect brand link on each page returns to `/`.
 
-## Offline Sign-In Prototype
+## API Client
 
-The `/sign-in` page validates a PA work email and a nonempty password locally. It does not authenticate users, create a session, or make API requests. Valid submission clears the password and displays an explicit offline status; credentials are not saved to browser storage. Authentication and password recovery need an agreed backend contract before integration.
+Requests to the backend go through the shared axios instance in `src/lib/api.ts`. The base URL defaults to `http://localhost:5000/api` and can be overridden with `NEXT_PUBLIC_API_URL` in `.env.local`. The backend must allow this frontend's origin through its `CORS_ORIGIN` setting.
+
+## Sign-In
+
+The `/sign-in` page asks for a PA work email first and sends it to `POST /api/people/check-email`. If the response is `{ registered: true }`, a password field appears. Otherwise the user is sent to `/setup-existing-user`. The password is checked with `POST /api/people/login`. On success, the returned person (without the password hash) is stored in `sessionStorage` under `coffee-connect-person` and the user is sent to `/home`. This is temporary until proper sessions are added.
 
 ## Offline Interests Prototype
 
