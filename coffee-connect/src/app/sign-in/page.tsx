@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
+import { startDemoSession } from "../auth-gate";
 import CompanyLogo from "../company-logo";
 import styles from "../page.module.css";
 
@@ -52,9 +53,13 @@ export default function SignInPage() {
       return;
     }
 
+    const nextPath = new URLSearchParams(window.location.search).get("next");
+    const destination = nextPath === "/interests" ? "/interests" : "/meetups";
+
+    startDemoSession();
     passwordInput.value = "";
     setShowPassword(false);
-    router.push("/meetups");
+    router.push(destination);
   }
 
   function clearFeedback() {
@@ -72,7 +77,7 @@ export default function SignInPage() {
             <span>CoffeeConnect</span>
           </Link>
           <div className={styles.headerUtility}>
-            <p>Internal desk booking dashboard</p>
+            <Link className={styles.headerHomeLink} href="/">Back to homepage</Link>
             <CompanyLogo />
           </div>
         </div>
@@ -85,7 +90,7 @@ export default function SignInPage() {
             Welcome back to CoffeeConnect.
           </p>
           <p className={styles.status} role="status">
-            Demo only: sign-in is not connected. A valid work email and non-empty password will open the sample meetups.
+            Demo only: sign-in is not connected. A valid work email and non-empty password grant access in this tab; no credentials are saved.
           </p>
           <form noValidate onSubmit={handleSubmit}>
             <div className={styles.field}>
