@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { startDemoSession } from "../auth-gate";
 import CompanyLogo from "../company-logo";
 import styles from "../page.module.css";
 
@@ -56,6 +57,7 @@ export default function RegisterPage() {
       return;
     }
 
+    startDemoSession();
     router.push("/interests");
   }
 
@@ -68,7 +70,7 @@ export default function RegisterPage() {
             <span>CoffeeConnect</span>
           </Link>
           <div className={styles.headerUtility}>
-            <p>Internal desk booking dashboard</p>
+            <Link className={styles.headerHomeLink} href="/">Back to homepage</Link>
             <CompanyLogo />
           </div>
         </div>
@@ -79,6 +81,9 @@ export default function RegisterPage() {
           <h2 id="registration-heading">Register</h2>
           <p className={styles.registrationIntro}>
             Create your profile to find colleagues with shared interests.
+          </p>
+          <p className={styles.status} role="status">
+            Demo only: completing registration grants access in this tab. No account is created.
           </p>
           <form id="registration-form" noValidate onSubmit={handleSubmit}>
             <div className={styles.field}>
