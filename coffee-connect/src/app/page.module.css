@@ -33,6 +33,18 @@
   font-size: 0.9rem;
 }
 
+.headerHomeLink {
+  color: #c6cfdd;
+  font-family: Arial, sans-serif;
+  font-size: 0.9rem;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.headerHomeLink:hover {
+  color: #fff;
+}
+
 .headerUtility {
   display: flex;
   align-items: center;
@@ -162,7 +174,8 @@
 .field input:focus-visible,
 .field select:focus-visible,
 .submit:focus-visible,
-.brand:focus-visible {
+.brand:focus-visible,
+.headerHomeLink:focus-visible {
   outline: 3px solid #1683f5;
   outline-offset: 2px;
 }
@@ -314,6 +327,22 @@ button.backLink {
   background: #0d54a5;
 }
 
+.signOutButton {
+  padding: 0;
+  border: 0;
+  color: #8fc4ff;
+  background: transparent;
+  font: 700 0.9rem Arial, sans-serif;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.signOutButton:focus-visible {
+  outline: 3px solid #1683f5;
+  outline-offset: 3px;
+}
+
 @media (max-width: 767px) {
   .headerInner {
     align-items: flex-start;
@@ -385,5 +414,541 @@ button.backLink {
 
   .meetupStatus {
     justify-self: start;
+  }
+}
+
+.homePage {
+  --ink: #17202b;
+  --muted: #586577;
+  --line: #d5dce6;
+  --paper: #f4f6f9;
+  --accent: #1683f5;
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.homeHeader {
+  background: #080d15;
+}
+
+.homeHeaderInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: min(100% - 3rem, 76rem);
+  min-height: 5.25rem;
+  margin: 0 auto;
+}
+
+.homeHeader .brand {
+  flex: none;
+  gap: 0.55rem;
+  font-size: 1.1rem;
+}
+
+.homeHeader .brandMark {
+  border-color: #1683f5;
+  color: #fff;
+}
+
+.brandAccent {
+  color: #8fc4ff;
+}
+
+.homeNav,
+.homeHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 1.35rem;
+}
+
+.homeNav a,
+.homeSignIn {
+  color: #f4f4ee;
+  font-size: 0.9rem;
+  text-decoration: none;
+  text-underline-offset: 0.28em;
+}
+
+.homeNav a:hover,
+.homeSignIn:hover {
+  text-decoration: underline;
+}
+
+.homeHeaderActions {
+  gap: 1rem;
+}
+
+.homeRegister {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.55rem;
+  padding: 0.5rem 0.95rem;
+  border: 1px solid #f0a18a;
+  border-radius: 3px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.homeRegister:hover {
+  background: rgb(255 255 255 / 10%);
+}
+
+.homeHeader .companyLogo {
+  width: 105px;
+  height: 50px;
+}
+
+.homeMain {
+  display: block;
+  width: min(100% - 3rem, 76rem);
+  padding: 0 0 4rem;
+}
+
+.homeHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.94fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  padding: 4.25rem 0 3.5rem;
+}
+
+.homeHeroCopy {
+  max-width: 34rem;
+}
+
+.homeEyebrow {
+  margin: 0 0 0.85rem;
+  color: #145caf;
+  font-family: var(--font-geist-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+}
+
+.homeHero h1 {
+  max-width: 12ch;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.8rem, 4.4vw, 4.35rem);
+  font-weight: 500;
+  line-height: 1.04;
+}
+
+.homeHero h1 span {
+  color: #145caf;
+  font-style: italic;
+}
+
+.homeLead {
+  max-width: 33rem;
+  margin: 1.4rem 0 0;
+  color: #4e5e56;
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+.homeHeroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.25rem;
+  margin-top: 1.75rem;
+}
+
+.homePrimaryAction,
+.homeSecondaryAction,
+.nextChatAction,
+.meetupBanner > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  text-decoration: none;
+}
+
+.homePrimaryAction {
+  padding: 0.7rem 1.1rem;
+  border-radius: 3px;
+  color: #fff;
+  background: #146ed1;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.homePrimaryAction:hover {
+  background: #0d54a5;
+}
+
+.homeSecondaryAction {
+  color: #145caf;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.homeSignInNote {
+  margin: 1.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.homeSignInNote a {
+  color: #145caf;
+  font-weight: 700;
+  text-underline-offset: 0.2em;
+}
+
+.homeVisual {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 1.24;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #dce5df;
+}
+
+.homePhoto {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.homePhotoCaption {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  left: 1rem;
+  width: fit-content;
+  max-width: calc(100% - 2rem);
+  padding: 0.65rem 0.85rem;
+  border-left: 3px solid #1683f5;
+  color: #fff;
+  background: rgb(21 42 34 / 88%);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+}
+
+.homeContent {
+  display: grid;
+  grid-template-columns: minmax(0, 0.93fr) minmax(0, 1.07fr);
+  align-items: stretch;
+  gap: 1.25rem;
+  padding: 1.25rem 0 3.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.nextChatPanel,
+.stepsPanel {
+  min-width: 0;
+  padding: 1.7rem;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fff;
+}
+
+.nextChatPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  border-top: 3px solid #1683f5;
+}
+
+.nextChatCopy h2,
+.stepsPanel h2,
+.meetupBanner h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.65rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.nextChatCopy > p:last-child {
+  max-width: 28rem;
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.6;
+}
+
+.nextChatAction {
+  min-height: 2.6rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid #145caf;
+  border-radius: 3px;
+  color: #145caf;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.nextChatAction:hover {
+  background: #e9f3ff;
+}
+
+.stepsPanel h2 {
+  margin-bottom: 1.1rem;
+}
+
+.homeSteps {
+  display: grid;
+  gap: 0.95rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.homeSteps li {
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  align-items: start;
+  gap: 0.7rem;
+}
+
+.stepNumber {
+  display: grid;
+  width: 2rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 50%;
+  color: #145caf;
+  background: #e9f3ff;
+  font-family: var(--font-geist-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.homeSteps h3 {
+  margin: 0.1rem 0 0;
+  font-size: 0.94rem;
+}
+
+.homeSteps p {
+  margin: 0.2rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.meetupBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.8rem 2rem;
+  border-radius: 5px;
+  color: #f5f6f0;
+  background: #080d15;
+}
+
+.meetupBanner .homeEyebrow {
+  color: #8fc4ff;
+}
+
+.meetupBanner h2 {
+  max-width: 35rem;
+  font-size: 1.55rem;
+}
+
+.meetupBanner p:last-child {
+  margin: 0.45rem 0 0;
+  color: #d4e0d9;
+  font-size: 0.9rem;
+}
+
+.meetupBanner > a {
+  flex: none;
+  min-height: 2.7rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid #6baeff;
+  border-radius: 3px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.meetupBanner > a:hover {
+  background: rgb(255 255 255 / 10%);
+}
+
+.homeFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: min(100% - 3rem, 76rem);
+  margin: 0 auto;
+  padding: 1.1rem 0 1.4rem;
+  border-top: 1px solid var(--line);
+  color: #617067;
+  font-size: 0.78rem;
+}
+
+.homeHeader a:focus-visible,
+.homeMain a:focus-visible,
+.homeFooter a:focus-visible {
+  outline: 3px solid #1683f5;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .homeHeroCopy {
+    animation: home-rise-in 650ms ease-out both;
+  }
+
+  .homeVisual {
+    animation: home-fade-in 800ms 100ms ease-out both;
+  }
+}
+
+@keyframes home-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes home-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .homeHeaderInner {
+    gap: 1rem;
+  }
+
+  .homeHeader .companyLogo {
+    width: 86px;
+    height: 46px;
+  }
+
+  .homeNav {
+    gap: 0.9rem;
+  }
+
+  .homeHero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .homeHeaderInner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.8rem 1rem;
+    width: min(100% - 2rem, 42rem);
+    padding: 0.85rem 0;
+  }
+
+  .homeHeader .companyLogo {
+    display: none;
+  }
+
+  .homeNav {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    gap: 1.2rem;
+  }
+
+  .homeHeaderActions {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .homeMain {
+    width: min(100% - 2rem, 42rem);
+  }
+
+  .homeHero {
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+    padding: 3rem 0 2.5rem;
+  }
+
+  .homeHero h1 {
+    max-width: 13ch;
+    font-size: clamp(2.65rem, 9vw, 3.7rem);
+  }
+
+  .homeVisual {
+    aspect-ratio: 1.45;
+  }
+
+  .homeContent {
+    grid-template-columns: 1fr;
+  }
+
+  .homeFooter {
+    width: min(100% - 2rem, 42rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .homeHeaderActions {
+    gap: 0.65rem;
+  }
+
+  .homeSignIn,
+  .homeRegister {
+    font-size: 0.82rem;
+  }
+
+  .homeRegister {
+    min-height: 2.35rem;
+    padding: 0.4rem 0.65rem;
+  }
+
+  .homeNav {
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .homeNav a {
+    font-size: 0.83rem;
+  }
+
+  .homeContent {
+    gap: 0.8rem;
+  }
+
+  .nextChatPanel,
+  .stepsPanel {
+    padding: 1.25rem;
+  }
+
+  .meetupBanner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1.1rem;
+    padding: 1.4rem 1.25rem;
+  }
+
+  .homeFooter {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.4rem;
   }
 }

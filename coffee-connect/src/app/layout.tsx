@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CoffeeConnect | Desk Booking",
-  description: "Register for internal CoffeeConnect events.",
+  title: "Coffee Connect | PA Consulting",
+  description: "Meet colleagues across PA Consulting through shared interests and coffee meetups.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

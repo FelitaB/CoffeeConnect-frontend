@@ -4,6 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
+import { startDemoSession } from "../auth-gate";
 import CompanyLogo from "../company-logo";
 import { checkEmail, login, storePerson } from "@/lib/api";
 import styles from "../page.module.css";
@@ -91,9 +92,13 @@ export default function SignInPage() {
       setSubmitting(false);
     }
 
+    const nextPath = new URLSearchParams(window.location.search).get("next");
+    const destination = nextPath === "/interests" ? "/interests" : "/meetups";
+
+    startDemoSession();
     passwordInput.value = "";
     setShowPassword(false);
-    router.push("/meetups");
+    router.push(destination);
   }
 
   function changeEmail() {
@@ -114,7 +119,7 @@ export default function SignInPage() {
             <span>CoffeeConnect</span>
           </Link>
           <div className={styles.headerUtility}>
-            <p>Internal desk booking dashboard</p>
+            <Link className={styles.headerHomeLink} href="/">Back to homepage</Link>
             <CompanyLogo />
           </div>
         </div>
@@ -127,7 +132,7 @@ export default function SignInPage() {
             {step === "email" ? "Welcome back to CoffeeConnect." : `Signing in as ${email}`}
           </p>
           <p className={styles.status} role="status">
-            Demo only: sign-in is not connected. A valid work email and non-empty password will open the sample meetups.
+            Demo only: sign-in is not connected. A valid work email and non-empty password grant access in this tab; no credentials are saved.
           </p>
           <form noValidate onSubmit={handleSubmit}>
             {step === "email" ? (

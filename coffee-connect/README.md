@@ -41,7 +41,7 @@ The `/sign-in` page asks for a PA work email first and sends it to `POST /api/pe
 
 ## Offline Interests Prototype
 
-The `/interests` page loads local mock objects in `useEffect`; it makes no API requests and does not connect to MySQL. The provisional object shape is `{ interest_id: number, name: string }`. All mock IDs are placeholders, not database IDs.
+The `/register` page also grants the temporary demo marker after valid form submission so the prototype can continue to `/interests`; it does not create an account or store credentials. The `/interests` page loads local mock objects in `useEffect`; it makes no API requests and does not connect to MySQL. The provisional object shape is `{ interest_id: number, name: string }`. All mock IDs are placeholders, not database IDs.
 
 Selecting 3 to 10 interests creates a draft payload shaped as `{ interest_ids: number[] }`, stored only in this browser under `coffee-connect-mock-interests-draft`. Draft selections are not restored on reload. The separate key keeps mock IDs apart from the older name-based browser storage.
 
