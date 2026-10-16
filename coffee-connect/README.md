@@ -31,11 +31,11 @@ The CoffeeConnect brand link on each page returns to `/`.
 
 ## Offline Sign-In Prototype
 
-The `/sign-in` page validates a PA work email and a nonempty password locally. It does not authenticate users, create a session, or make API requests. Valid submission clears the password and displays an explicit offline status; credentials are not saved to browser storage. Authentication and password recovery need an agreed backend contract before integration.
+The `/sign-in` page validates a PA work email and a nonempty password locally. A valid submission creates a temporary demo access marker in `sessionStorage` and clears the password; it does not create an account, verify credentials, or make API requests. `/meetups` and `/interests` use this marker for a frontend-only route gate. This is a prototype convenience, not authentication or a security boundary; real access control requires backend authentication and server-side authorization.
 
 ## Offline Interests Prototype
 
-The `/interests` page loads local mock objects in `useEffect`; it makes no API requests and does not connect to MySQL. The provisional object shape is `{ interest_id: number, name: string }`. All mock IDs are placeholders, not database IDs.
+The `/register` page also grants the temporary demo marker after valid form submission so the prototype can continue to `/interests`; it does not create an account or store credentials. The `/interests` page loads local mock objects in `useEffect`; it makes no API requests and does not connect to MySQL. The provisional object shape is `{ interest_id: number, name: string }`. All mock IDs are placeholders, not database IDs.
 
 Selecting 3 to 10 interests creates a draft payload shaped as `{ interest_ids: number[] }`, stored only in this browser under `coffee-connect-mock-interests-draft`. Draft selections are not restored on reload. The separate key keeps mock IDs apart from the older name-based browser storage.
 
