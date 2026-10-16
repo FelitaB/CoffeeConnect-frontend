@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { type FormEvent, useEffect, useState } from "react";
+import DemoAuthGate, { SignOutButton } from "../auth-gate";
 import CompanyLogo from "../company-logo";
 import styles from "../page.module.css";
 
@@ -43,6 +44,14 @@ const MOCK_INTERESTS: Interest[] = [
 const MOCK_DRAFT_STORAGE_KEY = "coffee-connect-mock-interests-draft";
 
 export default function InterestsPage() {
+  return (
+    <DemoAuthGate returnTo="/interests">
+      <InterestsPageContent />
+    </DemoAuthGate>
+  );
+}
+
+function InterestsPageContent() {
   const [interests, setInterests] = useState<Interest[] | null>(null);
   const [loadError, setLoadError] = useState("");
   const [loadAttempt, setLoadAttempt] = useState(0);
@@ -124,6 +133,7 @@ export default function InterestsPage() {
           </Link>
           <div className={styles.headerUtility}>
             <p>Build your profile</p>
+            <SignOutButton />
             <CompanyLogo />
           </div>
         </div>
