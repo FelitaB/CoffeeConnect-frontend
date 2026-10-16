@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { describePasswordProblems, getPasswordProblems, PASSWORD_REQUIREMENTS } from "@/lib/password";
 import styles from "../page.module.css";
 
 export default function RegisterPage() {
@@ -27,7 +28,8 @@ export default function RegisterPage() {
     const validEmail =
       emailInput.validity.valid &&
       emailInput.value.toLowerCase().endsWith("@paconsulting.com");
-    const validPassword = passwordInput.value.length >= 8;
+    const passwordProblems = getPasswordProblems(passwordInput.value);
+    const validPassword = passwordProblems.length === 0;
     const messages: string[] = [];
 
     setEmailInvalid(!validEmail);
@@ -40,7 +42,7 @@ export default function RegisterPage() {
       messages.push("Use a valid work email ending in @paconsulting.com.");
     }
     if (!validPassword) {
-      messages.push("Your password must be at least eight characters long.");
+      messages.push(describePasswordProblems(passwordProblems));
     }
 
     if (messages.length > 0) {
@@ -113,11 +115,13 @@ export default function RegisterPage() {
                 name="password"
                 type="password"
                 autoComplete="new-password"
-                minLength={8}
-                aria-describedby="registration-warning"
+                aria-describedby="password-requirements registration-warning"
                 aria-invalid={passwordInvalid || undefined}
                 required
               />
+              <p className={styles.interestGuidance} id="password-requirements">
+                {PASSWORD_REQUIREMENTS}
+              </p>
             </div>
             <p
               className={styles.warning}

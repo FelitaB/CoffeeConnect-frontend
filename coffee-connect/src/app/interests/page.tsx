@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useState } from "react";
+import { completeRegistration, getApiErrorMessage, getStoredPerson, storePerson } from "@/lib/api";
 import styles from "../page.module.css";
 
 type Interest = {
@@ -14,40 +16,43 @@ type InterestsPayload = {
 };
 
 const MOCK_INTERESTS: Interest[] = [
-  { interest_id: 1, name: "Cooking and food" },
-  { interest_id: 2, name: "Books and reading" },
-  { interest_id: 3, name: "Hiking and outdoors" },
-  { interest_id: 4, name: "Travel" },
-  { interest_id: 5, name: "Music and live events" },
-  { interest_id: 6, name: "Photography" },
-  { interest_id: 7, name: "Board games" },
-  { interest_id: 8, name: "Fitness and running" },
-  { interest_id: 9, name: "Technology" },
-  { interest_id: 10, name: "Art and design" },
-  { interest_id: 11, name: "Gardening" },
-  { interest_id: 12, name: "Video Games" },
-  { interest_id: 13, name: "Movies and TV" },
-  { interest_id: 14, name: "Podcasts" },
-  { interest_id: 15, name: "Sports" },
-  { interest_id: 16, name: "Cycling" },
-  { interest_id: 17, name: "Volunteering" },
-  { interest_id: 18, name: "Languages" },
-  { interest_id: 19, name: "History" },
-  { interest_id: 20, name: "Personal finance" },
-  { interest_id: 21, name: "Entrepreneurship" },
-  { interest_id: 22, name: "Mindfulness" },
-  { interest_id: 23, name: "Pets" },
+  { interest_id: 1, name: "Coffee and cafes" },
+  { interest_id: 2, name: "Cooking and food" },
+  { interest_id: 3, name: "Books and reading" },
+  { interest_id: 4, name: "Hiking and outdoors" },
+  { interest_id: 5, name: "Travel" },
+  { interest_id: 6, name: "Music and live events" },
+  { interest_id: 7, name: "Photography" },
+  { interest_id: 8, name: "Board games" },
+  { interest_id: 9, name: "Fitness and running" },
+  { interest_id: 10, name: "Technology" },
+  { interest_id: 11, name: "Art and design" },
+  { interest_id: 12, name: "Gardening" },
+  { interest_id: 13, name: "Video Games" },
+  { interest_id: 14, name: "Movies and TV" },
+  { interest_id: 15, name: "Podcasts" },
+  { interest_id: 16, name: "Sports" },
+  { interest_id: 17, name: "Cycling" },
+  { interest_id: 18, name: "Volunteering" },
+  { interest_id: 19, name: "Languages" },
+  { interest_id: 20, name: "History" },
+  { interest_id: 21, name: "Personal finance" },
+  { interest_id: 22, name: "Entrepreneurship" },
+  { interest_id: 23, name: "Mindfulness" },
+  { interest_id: 24, name: "Pets" },
 ];
 
 const MOCK_DRAFT_STORAGE_KEY = "coffee-connect-mock-interests-draft";
 
 export default function InterestsPage() {
+  const router = useRouter();
   const [interests, setInterests] = useState<Interest[] | null>(null);
   const [loadError, setLoadError] = useState("");
   const [loadAttempt, setLoadAttempt] = useState(0);
   const [selectedInterestIds, setSelectedInterestIds] = useState<number[]>([]);
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -83,7 +88,7 @@ export default function InterestsPage() {
     setStatus("");
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus("");
 
@@ -103,6 +108,21 @@ export default function InterestsPage() {
     }
 
     const payload: InterestsPayload = { interest_ids: selectedInterestIds };
+
+    // People coming from /choose-password have an account to finish; /register is still offline.
+    const person = getStoredPerson();
+    if (person && !person.registered) {
+      setError("");
+      setSubmitting(true);
+      try {
+        storePerson(await completeRegistration(person.id, payload.interest_ids));
+        router.push("/home");
+      } catch (submitError) {
+        setError(getApiErrorMessage(submitError, "Unable to save your interests. Please try again."));
+        setSubmitting(false);
+      }
+      return;
+    }
 
     try {
       localStorage.setItem(MOCK_DRAFT_STORAGE_KEY, JSON.stringify(payload));
@@ -190,8 +210,12 @@ export default function InterestsPage() {
             </div>
             <p className={styles.warning} role="alert" hidden={!error}>{error}</p>
             <p className={styles.status} role="status">{status}</p>
-            <button className={styles.submit} type="submit" disabled={!interests || Boolean(loadError)}>
-              Save draft
+            <button
+              className={styles.submit}
+              type="submit"
+              disabled={!interests || Boolean(loadError) || submitting}
+            >
+              {submitting ? "Saving..." : "Save interests"}
             </button>
           </form>
           <Link className={styles.backLink} href="/register">Back to registration</Link>

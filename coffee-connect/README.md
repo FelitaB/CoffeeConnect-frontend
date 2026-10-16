@@ -24,9 +24,9 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 - `/`: Homepage with sign-in and registration choices.
 - `/sign-in`: Two-step sign-in (email, then password), with a link to registration.
-- `/setup-existing-user`: Placeholder for people whose account is not registered yet.
+- `/choose-password`: Lets a person who isn't registered yet choose a password, then continues to `/interests`.
 - `/home`: Placeholder landing page after a successful sign-in.
-- `/register`: Registration form; valid inputs continue to `/interests` without creating an account yet.
+- `/register`: Registration form, using the same password rule; valid inputs continue to `/interests` without creating an account yet.
 - `/interests`: Offline interest selection, with a link back to `/register`.
 
 The CoffeeConnect brand link on each page returns to `/`.
@@ -37,7 +37,13 @@ Requests to the backend go through the shared axios instance in `src/lib/api.ts`
 
 ## Sign-In
 
-The `/sign-in` page asks for a PA work email first and sends it to `POST /api/people/check-email`. If the response is `{ registered: true }`, a password field appears. Otherwise the user is sent to `/setup-existing-user`. The password is checked with `POST /api/people/login`. On success, the returned person (without the password hash) is stored in `sessionStorage` under `coffee-connect-person` and the user is sent to `/home`. This is temporary until proper sessions are added.
+The `/sign-in` page asks for a PA work email first and sends it to `POST /api/people/check-email`. If the response is `{ registered: true }`, a password field appears. Otherwise the email is kept in `sessionStorage` under `coffee-connect-pending-email` and the user is sent to `/choose-password`. The password is checked with `POST /api/people/login`. On success, the returned person (without the password hash) is stored in `sessionStorage` under `coffee-connect-person` and the user is sent to `/home`. This is temporary until proper sessions are added.
+
+## Choosing a Password
+
+`/choose-password` asks for a password twice and sends it to `POST /api/people/set-password`, which hashes and saves it. The password must be 8-20 characters with at least one capital letter, one number and one symbol. The rule lives in `src/lib/password.ts` and the backend checks it again. The returned person is stored in `sessionStorage` and the user continues to `/interests`. Saving 3 to 10 interests there calls `POST /api/people/:id/complete-registration`, which saves the interests and sets `registered` to `true`. The user then goes to `/home`. Without a signed-in, unregistered person (for example, coming from `/register`), the interests page still saves an offline draft instead.
+
+The email is not verified yet, so anyone who knows an unregistered colleague's email can choose their password. Add email verification before going live.
 
 ## Offline Interests Prototype
 

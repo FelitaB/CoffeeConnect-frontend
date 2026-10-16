@@ -4,7 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
-import { checkEmail, login, storePerson } from "@/lib/api";
+import { checkEmail, login, SESSION_PENDING_EMAIL_KEY, storePerson } from "@/lib/api";
 import styles from "../page.module.css";
 
 type Step = "email" | "password";
@@ -40,7 +40,8 @@ export default function SignInPage() {
     if (registered) {
       setStep("password");
     } else {
-      router.push("/setup-existing-user");
+      sessionStorage.setItem(SESSION_PENDING_EMAIL_KEY, trimmedEmail);
+      router.push("/choose-password");
     }
   }
 
