@@ -1,4 +1,5 @@
 import Link from "next/link";
+import DemoAuthGate, { SignOutButton } from "../auth-gate";
 import CompanyLogo from "../company-logo";
 import styles from "../page.module.css";
 
@@ -43,6 +44,14 @@ function formatDate(datetime: number) {
 
 export default function MeetupsPage() {
   return (
+    <DemoAuthGate returnTo="/meetups">
+      <MeetupsPageContent />
+    </DemoAuthGate>
+  );
+}
+
+function MeetupsPageContent() {
+  return (
     <div className={styles.page}>
       <header className={styles.header}>
         <div className={styles.headerInner}>
@@ -52,6 +61,7 @@ export default function MeetupsPage() {
           </Link>
           <div className={styles.headerUtility}>
             <p>Your coffee meetups</p>
+            <SignOutButton />
             <CompanyLogo />
           </div>
         </div>
@@ -88,7 +98,7 @@ export default function MeetupsPage() {
             ))}
           </ul>
 
-          <Link className={styles.backLink} href="/sign-in">Return to sign in</Link>
+          <Link className={styles.backLink} href="/interests">Update interests</Link>
         </section>
       </main>
     </div>
