@@ -1,20 +1,60 @@
 "use client";
 
+import axios from "axios";
 import Link from "next/link";
 import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { createPerson, type Person, SETUP_EMAIL_KEY, setPassword, storePerson } from "@/lib/api";
 import { startDemoSession } from "../auth-gate";
 import CompanyLogo from "../company-logo";
 import styles from "../page.module.css";
+
+const JOB_ROLES = ["ANA", "CON", "CAN", "SNC", "PCN", "MCN", "DIR", "IDP", "APP", "APA", "CDR", "PAR", "SPR"];
+
+const JOB_CAPABILITIES = [
+  "Advanced Data Analytics",
+  "Architecture",
+  "Backend Engineering",
+  "Biomedical Devices",
+  "Data Engineering",
+  "Delivery & Transformation",
+  "DevOps",
+  "Digital Design",
+  "Experience Design",
+  "Frontend Engineering",
+  "Human Factors",
+  "Network Technology",
+  "Physics",
+  "Process & Automation",
+  "Product & Strategy",
+  "Quality Assurance & Test",
+  "Research Operations",
+  "Simulation & Modelling",
+  "Software & AI Enabled Systems",
+];
+
+const JOB_GO_TO_MARKETS = [
+  "Consumer & Manufacturing",
+  "Defence & Security",
+  "Energy & Utilities",
+  "Financial Services",
+  "Government & Public Sector",
+  "Health",
+  "Life Sciences",
+  "Transport",
+];
 
 export default function RegisterPage() {
   const router = useRouter();
   const [warning, setWarning] = useState("");
   const [emailInvalid, setEmailInvalid] = useState(false);
   const [passwordInvalid, setPasswordInvalid] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [createdPerson, setCreatedPerson] = useState<Person | null>(null);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submitting) return;
     setWarning("");
 
     const form = event.currentTarget;
@@ -25,11 +65,13 @@ export default function RegisterPage() {
       return;
     }
 
-    emailInput.value = emailInput.value.trim();
+    emailInput.value = emailInput.value.trim().toLowerCase();
     const validEmail =
       emailInput.validity.valid &&
       emailInput.value.toLowerCase().endsWith("@paconsulting.com");
-    const validPassword = passwordInput.value.length >= 8;
+    const password = passwordInput.value;
+    const validPassword = password.length >= 8 && password.length <= 20 &&
+      /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9\s]/.test(password);
     const messages: string[] = [];
 
     setEmailInvalid(!validEmail);
@@ -42,7 +84,7 @@ export default function RegisterPage() {
       messages.push("Use a valid work email ending in @paconsulting.com.");
     }
     if (!validPassword) {
-      messages.push("Your password must be at least eight characters long.");
+      messages.push("Use 8 to 20 characters, including a capital letter, a number and a symbol.");
     }
 
     if (messages.length > 0) {
@@ -57,8 +99,42 @@ export default function RegisterPage() {
       return;
     }
 
-    startDemoSession();
-    router.push("/interests");
+    const fields = new FormData(form);
+    let person = createdPerson;
+    setSubmitting(true);
+
+    try {
+      if (!person) {
+        person = await createPerson({
+          first_name: String(fields.get("firstName") ?? "").trim(),
+          last_name: String(fields.get("lastName") ?? "").trim(),
+          email: emailInput.value,
+          location: String(fields.get("location") ?? ""),
+          job_role: String(fields.get("job_role") ?? ""),
+          job_capability: String(fields.get("job_capability") ?? ""),
+          job_go_to_market: String(fields.get("job_go_to_market") ?? ""),
+        });
+        setCreatedPerson(person);
+        sessionStorage.setItem(SETUP_EMAIL_KEY, person.email);
+      }
+
+      const updatedPerson = await setPassword(person.email, password);
+      storePerson(updatedPerson);
+      startDemoSession();
+      sessionStorage.removeItem(SETUP_EMAIL_KEY);
+      form.reset();
+      router.push("/interests");
+    } catch (error) {
+      if (person) {
+        setWarning("Your profile was created, but password setup could not be completed. Please retry, or return to sign in to resume setup.");
+      } else if (axios.isAxiosError(error) && error.response && error.response.status < 500) {
+        setWarning("Unable to create your account. Check your details, or sign in if you already have a profile.");
+      } else {
+        setWarning("Unable to reach CoffeeConnect right now. Please try again.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -82,17 +158,14 @@ export default function RegisterPage() {
           <p className={styles.registrationIntro}>
             Create your profile to find colleagues with shared interests.
           </p>
-          <p className={styles.status} role="status">
-            Demo only: completing registration grants access in this tab. No account is created.
-          </p>
           <form id="registration-form" noValidate onSubmit={handleSubmit}>
             <div className={styles.field}>
               <label htmlFor="first-name">First name</label>
-              <input id="first-name" name="firstName" autoComplete="given-name" required />
+              <input id="first-name" name="firstName" autoComplete="given-name" required disabled={submitting || Boolean(createdPerson)} />
             </div>
             <div className={styles.field}>
               <label htmlFor="last-name">Last name</label>
-              <input id="last-name" name="lastName" autoComplete="family-name" required />
+              <input id="last-name" name="lastName" autoComplete="family-name" required disabled={submitting || Boolean(createdPerson)} />
             </div>
             <div className={styles.field}>
               <label htmlFor="email">Work email</label>
@@ -103,16 +176,38 @@ export default function RegisterPage() {
                 autoComplete="email"
                 aria-describedby="registration-warning"
                 aria-invalid={emailInvalid || undefined}
+                disabled={submitting || Boolean(createdPerson)}
                 required
               />
             </div>
             <div className={styles.field}>
               <label htmlFor="location">Location</label>
-              <select id="location" name="location" defaultValue="" required>
+              <select id="location" name="location" defaultValue="" required disabled={submitting || Boolean(createdPerson)}>
                 <option value="" disabled>Select your location</option>
                 <option value="LONDON">London Office</option>
                 <option value="MANCHESTER">Manchester Office</option>
                 <option value="BELFAST">Belfast Office</option>
+              </select>
+            </div>
+            <div className={styles.field}>
+              <label htmlFor="job-role">Job role</label>
+              <select id="job-role" name="job_role" defaultValue="" required disabled={submitting || Boolean(createdPerson)}>
+                <option value="" disabled>Select your job role</option>
+                {JOB_ROLES.map((role) => <option key={role} value={role}>{role}</option>)}
+              </select>
+            </div>
+            <div className={styles.field}>
+              <label htmlFor="job-capability">Job capability</label>
+              <select id="job-capability" name="job_capability" defaultValue="" required disabled={submitting || Boolean(createdPerson)}>
+                <option value="" disabled>Select your capability</option>
+                {JOB_CAPABILITIES.map((capability) => <option key={capability} value={capability}>{capability}</option>)}
+              </select>
+            </div>
+            <div className={styles.field}>
+              <label htmlFor="job-go-to-market">Go-to-market</label>
+              <select id="job-go-to-market" name="job_go_to_market" defaultValue="" required disabled={submitting || Boolean(createdPerson)}>
+                <option value="" disabled>Select your go-to-market</option>
+                {JOB_GO_TO_MARKETS.map((market) => <option key={market} value={market}>{market}</option>)}
               </select>
             </div>
             <div className={styles.field}>
@@ -123,10 +218,13 @@ export default function RegisterPage() {
                 type="password"
                 autoComplete="new-password"
                 minLength={8}
-                aria-describedby="registration-warning"
+                maxLength={20}
+                aria-describedby="password-guidance registration-warning"
                 aria-invalid={passwordInvalid || undefined}
+                disabled={submitting}
                 required
               />
+              <p className={styles.interestGuidance} id="password-guidance">8 to 20 characters, including a capital letter, a number and a symbol.</p>
             </div>
             <p
               className={styles.warning}
@@ -136,8 +234,8 @@ export default function RegisterPage() {
             >
               {warning}
             </p>
-            <button className={styles.submit} type="submit">
-              Continue to interests
+            <button className={styles.submit} type="submit" disabled={submitting}>
+              {submitting ? "Saving..." : "Continue to interests"}
             </button>
           </form>
           <Link className={styles.backLink} href="/sign-in">Already have an account? Sign in</Link>
