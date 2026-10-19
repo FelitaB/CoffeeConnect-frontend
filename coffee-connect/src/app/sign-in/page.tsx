@@ -4,7 +4,6 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
-import { startDemoSession } from "../auth-gate";
 import CompanyLogo from "../company-logo";
 import { checkEmail, login, storePerson } from "@/lib/api";
 import styles from "../page.module.css";
@@ -28,13 +27,6 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setWarning("");
-
-    const form = event.currentTarget;
-    const emailInput = form.querySelector<HTMLInputElement>("#sign-in-email");
-    const passwordInput = form.querySelector<HTMLInputElement>("#sign-in-password");
   async function handleEmailSubmit() {
     const trimmedEmail = email.trim();
     setEmail(trimmedEmail);
@@ -92,13 +84,6 @@ export default function SignInPage() {
       setSubmitting(false);
     }
 
-    const nextPath = new URLSearchParams(window.location.search).get("next");
-    const destination = nextPath === "/interests" ? "/interests" : "/meetups";
-
-    startDemoSession();
-    passwordInput.value = "";
-    setShowPassword(false);
-    router.push(destination);
   }
 
   function changeEmail() {
