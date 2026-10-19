@@ -370,6 +370,151 @@ button.backLink {
   list-style: none;
 }
 
+.newCoffeeChatButton {
+  display: inline-flex;
+  min-height: 2.9rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0.25rem 0 0.5rem;
+  padding: 0.65rem 1rem;
+  border: 0;
+  border-radius: 3px;
+  color: #fff;
+  background: #146ed1;
+  font: 700 0.95rem Arial, sans-serif;
+  text-decoration: none;
+}
+
+.newCoffeeChatButton:hover {
+  background: #0d54a5;
+}
+
+.newCoffeeChatButton:focus-visible {
+  outline: 3px solid #1683f5;
+  outline-offset: 2px;
+}
+
+.spinWheelStage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 2.5rem 0 1.5rem;
+}
+
+.spinWheel {
+  display: grid;
+  width: min(72vw, 22rem);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 0.6rem solid #fff;
+  border-radius: 50%;
+  background: conic-gradient(
+    #f08a64 0deg 45deg,
+    #e6bd4d 45deg 90deg,
+    #3d9b85 90deg 135deg,
+    #4d91c6 135deg 180deg,
+    #d96e66 180deg 225deg,
+    #e4a84d 225deg 270deg,
+    #5c9d77 270deg 315deg,
+    #7398ba 315deg 360deg
+  );
+  box-shadow: 0 0.7rem 1.6rem rgb(23 32 43 / 18%), inset 0 0 0 2px rgb(255 255 255 / 65%);
+  transition: transform 4s cubic-bezier(0.12, 0.72, 0.16, 1);
+}
+
+.spinWheelHub {
+  display: grid;
+  width: 4.25rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 0.3rem solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  background: #17202b;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.spinWheelPointer {
+  position: absolute;
+  z-index: 1;
+  top: 1.75rem;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-top: 1.15rem solid #17202b;
+  border-right: 0.8rem solid transparent;
+  border-left: 0.8rem solid transparent;
+  transform: translateX(-50%);
+}
+
+.spinWheelControls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.spinWheelControls button:disabled,
+.matchActions button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.matchResult {
+  margin: 0 auto;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: #fff;
+}
+
+.matchEyebrow {
+  margin: 0 0 0.25rem;
+  color: #145caf;
+  font-family: Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.matchResult h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.matchActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.declineButton {
+  min-height: 2.9rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid #a33b31;
+  border-radius: 3px;
+  color: #8c2f26;
+  background: #fff;
+  font: 700 0.95rem Arial, sans-serif;
+  cursor: pointer;
+}
+
+.declineButton:hover {
+  background: #fff1ef;
+}
+
+.declineButton:focus-visible {
+  outline: 3px solid #a33b31;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinWheel {
+    transition-duration: 1ms;
+  }
+}
+
 .meetupItem {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;

@@ -26,7 +26,7 @@ export function startDemoSession() {
   window.dispatchEvent(new Event(DEMO_SESSION_CHANGE_EVENT));
 }
 
-type ProtectedPath = "/interests" | "/meetups";
+type ProtectedPath = "/interests" | "/meetups" | "/spinwheel";
 
 type DemoAuthGateProps = {
   children: ReactNode;

@@ -77,6 +77,10 @@ function MeetupsPageContent() {
             Demo data only. These meetups aren’t connected to your account.
           </p>
 
+          <Link className={styles.newCoffeeChatButton} href="/spinwheel">
+            New CoffeeChat
+          </Link>
+
           <ul className={styles.meetupList}>
             {MOCK_MEETUPS.map((meetup) => (
               <li className={styles.meetupItem} key={meetup.id}>
