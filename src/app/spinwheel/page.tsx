@@ -140,6 +140,7 @@ export default function SpinwheelPage() {
             <div className={styles.headerUtility}>
               <p>New CoffeeChat</p>
               <SignOutButton />
+              <Link className={styles.headerHomeLink} href="/">Back to homepage</Link>
               <CompanyLogo />
             </div>
           </div>
