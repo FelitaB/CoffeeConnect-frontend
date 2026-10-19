@@ -31,7 +31,10 @@ export default function HomePage() {
             <span className={styles.brandMark} aria-hidden="true">C</span>
             <span>CoffeeConnect</span>
           </Link>
-          <p>Home</p>
+          <div className={styles.headerUtility}>
+            <p>Home</p>
+            <Link className={styles.headerHomeLink} href="/">Back to homepage</Link>
+          </div>
         </div>
       </header>
 
