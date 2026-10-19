@@ -67,7 +67,10 @@ export default function SetupExistingUserPage() {
             <span className={styles.brandMark} aria-hidden="true">C</span>
             <span>CoffeeConnect</span>
           </Link>
-          <p>Set up your account</p>
+          <div className={styles.headerUtility}>
+            <p>Set up your account</p>
+            <Link className={styles.headerHomeLink} href="/">Back to homepage</Link>
+          </div>
         </div>
       </header>
 
