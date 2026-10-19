@@ -37,7 +37,7 @@ Requests to the backend go through the shared axios instance in `src/lib/api.ts`
 
 ## Sign-In
 
-The `/sign-in` page asks for a PA work email first and sends it to `POST /api/people/check-email`. If the response is `{ registered: true }`, a password field appears. Otherwise the user is sent to `/setup-existing-user`. The password is checked with `POST /api/people/login`. On success, the returned person (without the password hash) is stored in `sessionStorage` under `coffee-connect-person` and the user is sent to `/home`. This is temporary until proper sessions are added.
+The `/sign-in` page asks for a PA work email first and sends it to `POST /api/people/check-email`. If the response is `{ registered: true }`, a password field appears. Otherwise the user is sent to `/setup-existing-user`. The password is checked with `POST /api/people/login`. On success, the returned person (without the password hash) is stored in `sessionStorage` under `coffee-connect-person` and the temporary demo marker is set for the existing route gates. The user is sent to `/home`, or to `/interests` or `/meetups` if that route was requested through the `next` query parameter. Failed sign-ins do not grant access or redirect. This is temporary until proper sessions are added.
 
 ## Offline Interests Prototype
 

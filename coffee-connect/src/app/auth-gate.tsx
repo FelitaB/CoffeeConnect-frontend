@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useSyncExternalStore, type ReactNode } from "react";
+import { SESSION_PERSON_KEY, SETUP_EMAIL_KEY } from "@/lib/api";
 import styles from "./page.module.css";
 
 export const DEMO_SESSION_KEY = "coffee-connect-demo-session";
@@ -64,6 +65,8 @@ export function SignOutButton() {
 
   function signOut() {
     window.sessionStorage.removeItem(DEMO_SESSION_KEY);
+    window.sessionStorage.removeItem(SESSION_PERSON_KEY);
+    window.sessionStorage.removeItem(SETUP_EMAIL_KEY);
     window.dispatchEvent(new Event(DEMO_SESSION_CHANGE_EVENT));
     router.replace("/");
   }

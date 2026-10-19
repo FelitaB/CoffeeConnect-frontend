@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
 import { startDemoSession } from "../auth-gate";
 import CompanyLogo from "../company-logo";
-import { checkEmail, login, storePerson } from "@/lib/api";
+import { checkEmail, login, SETUP_EMAIL_KEY, storePerson } from "@/lib/api";
 import styles from "../page.module.css";
 
 type Step = "email" | "password";
@@ -28,13 +28,6 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setWarning("");
-
-    const form = event.currentTarget;
-    const emailInput = form.querySelector<HTMLInputElement>("#sign-in-email");
-    const passwordInput = form.querySelector<HTMLInputElement>("#sign-in-password");
   async function handleEmailSubmit() {
     const trimmedEmail = email.trim();
     setEmail(trimmedEmail);
@@ -47,8 +40,10 @@ export default function SignInPage() {
 
     const { registered } = await checkEmail(trimmedEmail);
     if (registered) {
+      sessionStorage.removeItem(SETUP_EMAIL_KEY);
       setStep("password");
     } else {
+      sessionStorage.setItem(SETUP_EMAIL_KEY, trimmedEmail);
       router.push("/setup-existing-user");
     }
   }
@@ -63,7 +58,11 @@ export default function SignInPage() {
     try {
       const person = await login(email, password);
       storePerson(person);
-      router.push("/home");
+      startDemoSession();
+      setPassword("");
+      setShowPassword(false);
+      const nextPath = new URLSearchParams(window.location.search).get("next");
+      router.push(nextPath === "/interests" || nextPath === "/meetups" ? nextPath : "/home");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         setPassword("");
@@ -92,13 +91,6 @@ export default function SignInPage() {
       setSubmitting(false);
     }
 
-    const nextPath = new URLSearchParams(window.location.search).get("next");
-    const destination = nextPath === "/interests" ? "/interests" : "/meetups";
-
-    startDemoSession();
-    passwordInput.value = "";
-    setShowPassword(false);
-    router.push(destination);
   }
 
   function changeEmail() {
@@ -130,9 +122,6 @@ export default function SignInPage() {
           <h2 id="sign-in-heading">Sign in</h2>
           <p className={styles.registrationIntro}>
             {step === "email" ? "Welcome back to CoffeeConnect." : `Signing in as ${email}`}
-          </p>
-          <p className={styles.status} role="status">
-            Demo only: sign-in is not connected. A valid work email and non-empty password grant access in this tab; no credentials are saved.
           </p>
           <form noValidate onSubmit={handleSubmit}>
             {step === "email" ? (
