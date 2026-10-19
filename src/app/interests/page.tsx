@@ -142,6 +142,7 @@ function InterestsPageContent() {
           <div className={styles.headerUtility}>
             <p>Build your profile</p>
             <SignOutButton />
+            <Link className={styles.headerHomeLink} href="/">Back to homepage</Link>
             <CompanyLogo />
           </div>
         </div>
