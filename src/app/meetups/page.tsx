@@ -8,7 +8,7 @@ type Meetup = {
   personName: string;
   location: "LONDON" | "MANCHESTER" | "BELFAST";
   datetime: number;
-  status: "PENDING" | "ACCEPTED" | "DECLINED" | "COMPLETED";
+  status: "PENDING" | "ACCEPTED" | "COMPLETED";
 };
 
 const LOCATION_NAMES: Record<Meetup["location"], string> = {
@@ -32,7 +32,38 @@ const MOCK_MEETUPS: Meetup[] = [
     datetime: Date.UTC(2026, 9, 22, 13, 0) / 1000,
     status: "PENDING",
   },
+  {
+    id: "meetup-3",
+    personName: "Oliver Bennett",
+    location: "MANCHESTER",
+    datetime: Date.UTC(2026, 9, 26, 11, 0) / 1000,
+    status: "ACCEPTED",
+  },
+  {
+    id: "meetup-4",
+    personName: "Priya Shah",
+    location: "LONDON",
+    datetime: Date.UTC(2026, 9, 8, 9, 30) / 1000,
+    status: "COMPLETED",
+  },
+  {
+    id: "meetup-5",
+    personName: "Ethan Williams",
+    location: "BELFAST",
+    datetime: Date.UTC(2026, 9, 12, 14, 0) / 1000,
+    status: "COMPLETED",
+  },
+  {
+    id: "meetup-6",
+    personName: "Sofia Patel",
+    location: "MANCHESTER",
+    datetime: Date.UTC(2026, 9, 15, 11, 30) / 1000,
+    status: "COMPLETED",
+  },
 ];
+
+const UPCOMING_MEETUPS = MOCK_MEETUPS.filter((meetup) => meetup.status !== "COMPLETED");
+const PAST_MEETUPS = MOCK_MEETUPS.filter((meetup) => meetup.status === "COMPLETED");
 
 function formatDate(datetime: number) {
   return new Intl.DateTimeFormat("en-GB", {
@@ -57,54 +88,67 @@ function MeetupsPageContent() {
         <div className={styles.headerInner}>
           <Link className={styles.brand} href="/">
             <span className={styles.brandMark} aria-hidden="true">C</span>
-            <span>CoffeeConnect</span>
+            <span>Coffee <span className={styles.brandAccent}>Connect</span></span>
           </Link>
+          <nav className={styles.homeNav} aria-label="Main navigation">
+            <Link href="/interests">Interests</Link>
+            <Link href="/meetups" aria-current="page">Meetups</Link>
+          </nav>
           <div className={styles.headerUtility}>
-            <p>Your coffee meetups</p>
             <SignOutButton />
+            <Link className={styles.headerHomeLink} href="/">Back to homepage</Link>
             <CompanyLogo />
           </div>
         </div>
       </header>
 
-      <main className={styles.main}>
-        <section className={styles.registration} aria-labelledby="meetups-heading">
-          <h1 id="meetups-heading">My meetups</h1>
-          <p className={styles.registrationIntro}>
-            See who you’re meeting, and when and where.
-          </p>
+      <main className={`${styles.main} ${styles.meetupsMain}`}>
+        <div className={styles.meetupsIntro}>
+          <p className={styles.homeEyebrow}>MAKE TIME TO MEET</p>
+          <h1 id="meetups-heading">Your Meetups</h1>
+          <p>See who you’re meeting, and when and where.</p>
           <p className={styles.status} role="status">
             Demo data only. These meetups aren’t connected to your account.
           </p>
-
           <Link className={styles.newCoffeeChatButton} href="/spinwheel">
-            New CoffeeChat
+            Find a coffee match
           </Link>
+        </div>
 
-          <ul className={styles.meetupList}>
-            {MOCK_MEETUPS.map((meetup) => (
-              <li className={styles.meetupItem} key={meetup.id}>
-                <div>
-                  <h2 className={styles.meetupName}>
-                    Coffee with {meetup.personName}
-                  </h2>
-                  <p className={styles.meetupMeta}>
-                    {LOCATION_NAMES[meetup.location]} ·{" "}
-                    <time dateTime={new Date(meetup.datetime * 1000).toISOString()}>
-                      {formatDate(meetup.datetime)}
-                    </time>
-                  </p>
-                </div>
-                <span className={styles.meetupStatus}>
-                  {meetup.status.toLowerCase()}
-                </span>
-              </li>
-            ))}
+        <section className={styles.meetupSection} aria-labelledby="upcoming-heading">
+          <h2 id="upcoming-heading">Upcoming</h2>
+          <ul className={styles.meetupCards}>
+            {UPCOMING_MEETUPS.map((meetup) => <MeetupCard key={meetup.id} meetup={meetup} />)}
           </ul>
+        </section>
 
-          <Link className={styles.backLink} href="/interests">Update interests</Link>
+        <section className={`${styles.meetupSection} ${styles.pastMeetupSection}`} aria-labelledby="past-heading">
+          <h2 id="past-heading">Past Meetups</h2>
+          <ul className={styles.meetupCards}>
+            {PAST_MEETUPS.map((meetup) => <MeetupCard key={meetup.id} meetup={meetup} />)}
+          </ul>
+        </section>
+
+        <section className={styles.meetupBanner} aria-label="Find your next coffee match">
+          <div>
+            <h2>Ready to meet someone new?</h2>
+            <p>Your next great conversation could be one spin away.</p>
+          </div>
+          <Link href="/spinwheel">Spin the wheel</Link>
         </section>
       </main>
     </div>
+  );
+}
+
+function MeetupCard({ meetup }: { meetup: Meetup }) {
+  return (
+    <li className={styles.meetupCard}>
+      <span className={styles.meetupCardDot} aria-hidden="true" />
+      <h3>{meetup.personName}</h3>
+      <p>{formatDate(meetup.datetime)}</p>
+      <p>{LOCATION_NAMES[meetup.location]}</p>
+      <span className={styles.meetupCardStatus}>{meetup.status.toLowerCase()}</span>
+    </li>
   );
 }
