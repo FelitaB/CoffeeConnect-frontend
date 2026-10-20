@@ -6,7 +6,7 @@ export default function CompanyLogo() {
     <div className={styles.companyLogo}>
       <Image
         className={styles.companyLogoImage}
-        src="/fabs-logo.jpg"
+        src="/fabs-logo.png"
         alt="FABS Consulting"
         width={572}
         height={322}
