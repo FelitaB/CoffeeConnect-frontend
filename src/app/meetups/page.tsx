@@ -40,17 +40,21 @@ function MeetupsPageContent() {
         </div>
 
         <section className={styles.meetupSection} aria-labelledby="upcoming-heading">
-          <h2 id="upcoming-heading">Upcoming</h2>
-          <ul className={styles.meetupCards}>
-            {UPCOMING_MEETUPS.map((meetup) => <MeetupCard key={meetup.id} meetup={meetup} />)}
-          </ul>
+          <div className={styles.meetupBandInner}>
+            <h2 id="upcoming-heading">Upcoming</h2>
+            <ul className={styles.meetupCards}>
+              {UPCOMING_MEETUPS.map((meetup) => <MeetupCard key={meetup.id} meetup={meetup} />)}
+            </ul>
+          </div>
         </section>
 
         <section className={`${styles.meetupSection} ${styles.pastMeetupSection}`} aria-labelledby="past-heading">
-          <h2 id="past-heading">Past Meetups</h2>
-          <ul className={styles.meetupCards}>
-            {PAST_MEETUPS.map((meetup) => <MeetupCard key={meetup.id} meetup={meetup} />)}
-          </ul>
+          <div className={styles.meetupBandInner}>
+            <h2 id="past-heading">Past Meetups</h2>
+            <ul className={styles.meetupCards}>
+              {PAST_MEETUPS.map((meetup) => <MeetupCard key={meetup.id} meetup={meetup} />)}
+            </ul>
+          </div>
         </section>
 
       </main>
