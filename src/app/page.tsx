@@ -33,32 +33,59 @@ export default function Home() {
         </section>
 
         <section className={styles.stepsPanel} id="how-it-works" aria-labelledby="steps-heading">
-          <p className={styles.homeEyebrow}>A SIMPLE PLACE TO START</p>
-          <h2 id="steps-heading">Three steps. One new connection.</h2>
-          <p className={styles.stepsIntro}>Meet someone new, one cup at a time.</p>
-          <ol className={styles.homeSteps}>
-            <li>
-              <span className={styles.stepIcon} aria-hidden="true">☕</span>
-              <div>
-                <h3>Spin the wheel</h3>
-                <p>Find a colleague who shares your interests.</p>
-              </div>
-            </li>
-            <li>
-              <span className={styles.stepIcon} aria-hidden="true">✦</span>
-              <div>
-                <h3>Meet your match</h3>
-                <p>See what you have in common.</p>
-              </div>
-            </li>
-            <li>
-              <span className={styles.stepIcon} aria-hidden="true">☕</span>
-              <div>
-                <h3>Grab a coffee</h3>
-                <p>Arrange a meet-up and get to know someone new.</p>
-              </div>
-            </li>
-          </ol>
+          <div className={styles.stepsInner}>
+            <p className={styles.homeEyebrow}>A SIMPLE PLACE TO START</p>
+            <h2 id="steps-heading">Three steps. One new connection.</h2>
+            <p className={styles.stepsIntro}>Meet someone new, one cup at a time.</p>
+            <ol className={styles.homeSteps}>
+              <li>
+                <div className={styles.stepVisual}>
+                  <span className={styles.stepNumber}>1.</span>
+                  <span className={styles.stepIcon} aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M5 7h5V2M19 17h-5v5" />
+                      <path d="M6.5 17.5A8 8 0 0 0 20 12M17.5 6.5A8 8 0 0 0 4 12" />
+                    </svg>
+                  </span>
+                </div>
+                <div>
+                  <h3>Spin the wheel</h3>
+                  <p>Find a colleague who shares your interests.</p>
+                </div>
+              </li>
+              <li>
+                <div className={styles.stepVisual}>
+                  <span className={styles.stepNumber}>2.</span>
+                  <span className={styles.stepIcon} aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <circle cx="9" cy="8" r="3" />
+                      <path d="M3.5 20v-1.5a5.5 5.5 0 0 1 11 0V20" />
+                      <path d="m15 11 2 2 4-4" />
+                    </svg>
+                  </span>
+                </div>
+                <div>
+                  <h3>Meet your match</h3>
+                  <p>See what you have in common.</p>
+                </div>
+              </li>
+              <li>
+                <div className={styles.stepVisual}>
+                  <span className={styles.stepNumber}>3.</span>
+                  <span className={styles.stepIcon} aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M5 8h12v7a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8Z" />
+                      <path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17M8 4c0 1 1 1 1 2M12 3c0 1 1 1 1 2" />
+                    </svg>
+                  </span>
+                </div>
+                <div>
+                  <h3>Grab a coffee</h3>
+                  <p>Arrange a meet-up and get to know someone new.</p>
+                </div>
+              </li>
+            </ol>
+          </div>
         </section>
 
       </main>
