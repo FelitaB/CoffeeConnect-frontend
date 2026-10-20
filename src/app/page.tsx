@@ -12,7 +12,6 @@ export default function Home() {
             <span>Coffee <span className={styles.brandAccent}>Connect</span></span>
           </Link>
           <nav className={styles.homeNav} aria-label="Main navigation">
-            <Link href="/">Back to homepage</Link>
             <Link href="#how-it-works">How it works</Link>
             <Link href="/interests">Interests</Link>
             <Link href="/meetups">Meetups</Link>
