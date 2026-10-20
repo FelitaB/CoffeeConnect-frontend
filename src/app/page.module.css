@@ -1,4 +1,5 @@
 .page {
+  --content-width: min(100% - 3rem, 76rem);
   --ink: #352820;
   --muted: #6f715f;
   --line: #dfe2d7;
@@ -99,7 +100,7 @@
 .main {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  width: min(100% - 4rem, 68rem);
+  width: var(--content-width);
   margin: 0 auto;
   padding: 3.5rem 0;
 }
@@ -347,6 +348,10 @@ button.backLink {
 }
 
 @media (max-width: 767px) {
+  .page {
+    --content-width: min(100% - 2rem, 76rem);
+  }
+
   .headerInner {
     align-items: flex-start;
     flex-direction: column;
@@ -360,7 +365,7 @@ button.backLink {
 
   .main {
     grid-template-columns: minmax(0, 1fr);
-    width: min(100% - 2.5rem, 42rem);
+    width: var(--content-width);
     padding: 2rem 0;
   }
 
@@ -571,7 +576,6 @@ button.backLink {
   --line: #d5dce6;
   --paper: #f4f6f9;
   --accent: #1683f5;
-  min-height: 100vh;
   background: var(--paper);
   color: var(--ink);
 }
@@ -654,8 +658,8 @@ button.backLink {
 
 .homeMain {
   display: block;
-  width: min(100% - 3rem, 76rem);
-  padding: 0 0 4rem;
+  width: var(--content-width);
+  padding: 0;
 }
 
 .homeHero {
@@ -713,7 +717,7 @@ button.backLink {
 .homePrimaryAction,
 .homeSecondaryAction,
 .nextChatAction,
-.meetupBanner > a {
+.bannerInner > a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -890,14 +894,19 @@ button.backLink {
 }
 
 .meetupBanner {
+  width: 100%;
+  color: #f5f6f0;
+  background: #080d15;
+}
+
+.bannerInner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-  padding: 1.8rem 2rem;
-  border-radius: 5px;
-  color: #f5f6f0;
-  background: #080d15;
+  width: var(--content-width);
+  margin: 0 auto;
+  padding: 1.8rem 0;
 }
 
 .meetupBanner .homeEyebrow {
@@ -915,7 +924,7 @@ button.backLink {
   font-size: 0.9rem;
 }
 
-.meetupBanner > a {
+.bannerInner > a {
   flex: none;
   min-height: 2.7rem;
   padding: 0.55rem 0.9rem;
@@ -926,7 +935,7 @@ button.backLink {
   font-weight: 700;
 }
 
-.meetupBanner > a:hover {
+.bannerInner > a:hover {
   background: rgb(255 255 255 / 10%);
 }
 
@@ -935,7 +944,7 @@ button.backLink {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  width: min(100% - 3rem, 76rem);
+  width: var(--content-width);
   margin: 0 auto;
   padding: 1.1rem 0 1.4rem;
   border-top: 1px solid var(--line);
@@ -1027,7 +1036,7 @@ button.backLink {
   }
 
   .homeMain {
-    width: min(100% - 2rem, 42rem);
+    width: var(--content-width);
   }
 
   .homeHero {
@@ -1050,7 +1059,7 @@ button.backLink {
   }
 
   .homeFooter {
-    width: min(100% - 2rem, 42rem);
+    width: var(--content-width);
   }
 }
 
@@ -1087,11 +1096,11 @@ button.backLink {
     padding: 1.25rem;
   }
 
-  .meetupBanner {
+  .bannerInner {
     align-items: flex-start;
     flex-direction: column;
     gap: 1.1rem;
-    padding: 1.4rem 1.25rem;
+    padding: 1.4rem 0;
   }
 
   .homeFooter {
@@ -1168,7 +1177,7 @@ button.backLink {
 .homeHero {
   grid-template-columns: minmax(0, 1.2fr) minmax(15rem, 0.8fr);
   gap: clamp(2rem, 7vw, 6rem);
-  padding: clamp(2.5rem, 5vw, 4rem) clamp(0.5rem, 4vw, 3.5rem);
+  padding: clamp(2.5rem, 5vw, 4rem) 0;
 }
 
 .homeHeroCopy {
@@ -1297,7 +1306,7 @@ button.backLink {
 }
 
 .stepsPanel {
-  margin: 0 -1rem 2.5rem;
+  margin: 0 0 2.5rem;
   padding: clamp(1.5rem, 4vw, 2.5rem);
   border: 0;
   border-radius: 1rem;
@@ -1357,10 +1366,12 @@ button.backLink {
 }
 
 .meetupBanner {
-  padding: 1.4rem clamp(1.25rem, 4vw, 2rem);
-  border-radius: 0.9rem;
   color: var(--cream);
   background: var(--sage);
+}
+
+.bannerInner {
+  padding-block: 1.4rem;
 }
 
 .meetupBanner h2 {
@@ -1373,7 +1384,7 @@ button.backLink {
   color: #f3f5ed;
 }
 
-.meetupBanner > a {
+.bannerInner > a {
   min-height: 2.45rem;
   padding: 0.5rem 1rem;
   border: 0;
@@ -1382,7 +1393,7 @@ button.backLink {
   background: var(--accent);
 }
 
-.meetupBanner > a:hover {
+.bannerInner > a:hover {
   background: var(--accent-dark);
 }
 
@@ -1401,8 +1412,8 @@ button.backLink {
 
 .meetupsMain {
   display: block;
-  width: min(100% - 3rem, 76rem);
-  padding: 2.5rem 0 3rem;
+  width: var(--content-width);
+  padding: 2.5rem 0 1.5rem;
 }
 
 .meetupsIntro {
@@ -1432,8 +1443,8 @@ button.backLink {
 }
 
 .meetupSection {
-  margin: 0 -1rem;
-  padding: 1.5rem 1rem 1.8rem;
+  margin: 0;
+  padding: 1.5rem 0 1.8rem;
   background: var(--sage-pale);
 }
 
@@ -1533,7 +1544,7 @@ button.backLink {
   }
 
   .meetupsMain {
-    width: min(100% - 2rem, 42rem);
+    width: var(--content-width);
   }
 
   .meetupCards {
@@ -1579,7 +1590,7 @@ button.backLink {
 
   .homeMain,
   .homeFooter {
-    width: min(100% - 2rem, 42rem);
+    width: var(--content-width);
   }
 
   .homeSteps,
@@ -1595,7 +1606,7 @@ button.backLink {
     min-height: 8rem;
   }
 
-  .meetupBanner {
+  .bannerInner {
     align-items: flex-start;
     flex-direction: column;
     gap: 1rem;
