@@ -6,42 +6,8 @@ import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createPerson, type Person, SETUP_EMAIL_KEY, setPassword, storePerson } from "@/lib/api";
 import { startDemoSession } from "../auth-gate";
+import { JOB_CAPABILITIES, JOB_GO_TO_MARKETS, JOB_ROLES } from "./constants";
 import styles from "../page.module.css";
-
-const JOB_ROLES = ["ANA", "CON", "CAN", "SNC", "PCN", "MCN", "DIR", "IDP", "APP", "APA", "CDR", "PAR", "SPR"];
-
-const JOB_CAPABILITIES = [
-  "Advanced Data Analytics",
-  "Architecture",
-  "Backend Engineering",
-  "Biomedical Devices",
-  "Data Engineering",
-  "Delivery & Transformation",
-  "DevOps",
-  "Digital Design",
-  "Experience Design",
-  "Frontend Engineering",
-  "Human Factors",
-  "Network Technology",
-  "Physics",
-  "Process & Automation",
-  "Product & Strategy",
-  "Quality Assurance & Test",
-  "Research Operations",
-  "Simulation & Modelling",
-  "Software & AI Enabled Systems",
-];
-
-const JOB_GO_TO_MARKETS = [
-  "Consumer & Manufacturing",
-  "Defence & Security",
-  "Energy & Utilities",
-  "Financial Services",
-  "Government & Public Sector",
-  "Health",
-  "Life Sciences",
-  "Transport",
-];
 
 export default function RegisterPage() {
   const router = useRouter();
