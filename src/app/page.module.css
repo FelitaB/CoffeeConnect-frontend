@@ -1306,12 +1306,21 @@ button.backLink {
 }
 
 .stepsPanel {
+  position: relative;
+  left: 50%;
+  width: 100vw;
   margin: 0 0 2.5rem;
-  padding: clamp(1.5rem, 4vw, 2.5rem);
+  padding: clamp(1.5rem, 4vw, 2.5rem) 0;
   border: 0;
-  border-radius: 1rem;
+  border-radius: 0;
   background: var(--sage-pale);
   text-align: center;
+  transform: translateX(-50%);
+}
+
+.stepsInner {
+  width: var(--content-width);
+  margin: 0 auto;
 }
 
 .stepsPanel h2 {
@@ -1345,15 +1354,35 @@ button.backLink {
   text-align: left;
 }
 
+.stepVisual {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.stepNumber {
+  color: var(--accent);
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
 .stepIcon {
   display: grid;
-  width: 2rem;
+  width: 2.25rem;
   aspect-ratio: 1;
   place-items: center;
   border-radius: 50%;
   color: var(--accent-dark);
   background: #faeee6;
-  font-size: 1rem;
+}
+
+.stepIcon svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
 }
 
 .homeSteps h3 {
@@ -1443,9 +1472,18 @@ button.backLink {
 }
 
 .meetupSection {
+  position: relative;
+  left: 50%;
+  width: 100vw;
   margin: 0;
   padding: 1.5rem 0 1.8rem;
   background: var(--sage-pale);
+  transform: translateX(-50%);
+}
+
+.meetupBandInner {
+  width: var(--content-width);
+  margin: 0 auto;
 }
 
 .meetupSection h2 {
@@ -1456,7 +1494,7 @@ button.backLink {
 
 .pastMeetupSection {
   margin-top: 0.75rem;
-  border-radius: 0.75rem;
+  border-radius: 0;
   background: #f0f0e8;
 }
 
@@ -1474,7 +1512,7 @@ button.backLink {
   min-height: 9.25rem;
   flex-direction: column;
   align-items: flex-start;
-  padding: 1rem;
+  padding: 1rem 1.25rem;
   border: 1px solid rgb(57 39 31 / 5%);
   border-radius: 0.75rem;
   background: var(--cream);
