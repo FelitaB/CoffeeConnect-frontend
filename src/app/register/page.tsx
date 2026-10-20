@@ -6,7 +6,6 @@ import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createPerson, type Person, SETUP_EMAIL_KEY, setPassword, storePerson } from "@/lib/api";
 import { startDemoSession } from "../auth-gate";
-import CompanyLogo from "../company-logo";
 import styles from "../page.module.css";
 
 const JOB_ROLES = ["ANA", "CON", "CAN", "SNC", "PCN", "MCN", "DIR", "IDP", "APP", "APA", "CDR", "PAR", "SPR"];
@@ -138,20 +137,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link className={styles.brand} href="/">
-            <span className={styles.brandMark} aria-hidden="true">C</span>
-            <span>CoffeeConnect</span>
-          </Link>
-          <div className={styles.headerUtility}>
-            <Link className={styles.headerHomeLink} href="/">Back to homepage</Link>
-            <CompanyLogo />
-          </div>
-        </div>
-      </header>
-
+    <>
       <main className={styles.main} id="main-content">
         <section className={styles.registration} aria-labelledby="registration-heading">
           <h2 id="registration-heading">Register</h2>
@@ -162,7 +148,7 @@ export default function RegisterPage() {
             <div className={styles.field}>
               <label htmlFor="first-name">First name</label>
               <input id="first-name" name="firstName" autoComplete="given-name" required disabled={submitting || Boolean(createdPerson)} />
-            </div>
+                    </div>
             <div className={styles.field}>
               <label htmlFor="last-name">Last name</label>
               <input id="last-name" name="lastName" autoComplete="family-name" required disabled={submitting || Boolean(createdPerson)} />
@@ -241,6 +227,6 @@ export default function RegisterPage() {
           <Link className={styles.backLink} href="/sign-in">Already have an account? Sign in</Link>
         </section>
       </main>
-    </div>
+    </>
   );
 }

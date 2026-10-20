@@ -4,8 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useState } from "react";
 import { getStoredPerson, saveInterests, storePerson } from "@/lib/api";
-import DemoAuthGate, { SignOutButton } from "../auth-gate";
-import CompanyLogo from "../company-logo";
+import DemoAuthGate from "../auth-gate";
 import styles from "../page.module.css";
 
 type Interest = {
@@ -132,22 +131,7 @@ function InterestsPageContent() {
   }
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link className={styles.brand} href="/">
-            <span className={styles.brandMark} aria-hidden="true">C</span>
-            <span>CoffeeConnect</span>
-          </Link>
-          <div className={styles.headerUtility}>
-            <p>Build your profile</p>
-            <SignOutButton />
-            <Link className={styles.headerHomeLink} href="/">Back to homepage</Link>
-            <CompanyLogo />
-          </div>
-        </div>
-      </header>
-
+    <>
       <main className={styles.main} id="main-content">
         <section className={styles.registration} aria-labelledby="interests-heading">
           <h2 id="interests-heading">Choose your interests</h2>
@@ -201,7 +185,7 @@ function InterestsPageContent() {
                         </label>
                       );
                     })}
-                  </div>
+                                </div>
                 </details>
               )}
               <p className={styles.interestGuidance} id="interest-guidance">
@@ -220,6 +204,6 @@ function InterestsPageContent() {
           <Link className={styles.backLink} href="/sign-in">Back to sign in</Link>
         </section>
       </main>
-    </div>
+    </>
   );
 }
