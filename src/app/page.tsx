@@ -1,29 +1,9 @@
 import Link from "next/link";
-import CompanyLogo from "./company-logo";
 import styles from "./page.module.css";
 
 export default function Home() {
   return (
-    <div className={`${styles.page} ${styles.homePage}`}>
-      <header className={`${styles.header} ${styles.homeHeader}`}>
-        <div className={styles.homeHeaderInner}>
-          <Link className={styles.brand} href="/">
-            <span className={styles.brandMark} aria-hidden="true">C</span>
-            <span>Coffee <span className={styles.brandAccent}>Connect</span></span>
-          </Link>
-          <nav className={styles.homeNav} aria-label="Main navigation">
-            <Link href="#how-it-works">How it works</Link>
-            <Link href="/interests">Interests</Link>
-            <Link href="/meetups">Meetups</Link>
-          </nav>
-          <div className={styles.homeHeaderActions}>
-            <Link className={styles.homeSignIn} href="/sign-in">Sign in</Link>
-            <Link className={styles.homeRegister} href="/register">Register</Link>
-          </div>
-          <CompanyLogo />
-        </div>
-      </header>
-
+    <div className={styles.homePage}>
       <main className={`${styles.main} ${styles.homeMain}`} id="main-content">
         <section className={styles.homeHero} aria-labelledby="home-heading">
           <div className={styles.homeHeroCopy}>
@@ -81,14 +61,17 @@ export default function Home() {
           </ol>
         </section>
 
-        <section className={styles.meetupBanner} aria-labelledby="meetup-heading">
+      </main>
+
+      <section className={styles.meetupBanner} aria-labelledby="meetup-heading">
+        <div className={styles.bannerInner}>
           <div>
             <h2 id="meetup-heading">Ready to meet someone new?</h2>
             <p>Your next great conversation could be one spin away.</p>
           </div>
           <Link href="/spinwheel">Spin the wheel</Link>
-        </section>
-      </main>
+        </div>
+      </section>
 
       <footer className={styles.homeFooter}>
         <span>Coffee Connect <span aria-hidden="true">·</span> PA Consulting</span>
