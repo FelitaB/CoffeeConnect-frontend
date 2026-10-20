@@ -12,11 +12,15 @@ function formatDate(datetime: number) {
   }).format(new Date(datetime * 1000));
 }
 
-export default function MeetupsPage() {
+function MeetupCard({ meetup }: { meetup: Meetup }) {
   return (
-    <DemoAuthGate returnTo="/meetups">
-      <MeetupsPageContent />
-    </DemoAuthGate>
+    <li className={styles.meetupCard}>
+      <span className={styles.meetupCardDot} aria-hidden="true" />
+      <h3>{meetup.personName}</h3>
+      <p>{formatDate(meetup.datetime)}</p>
+      <p>{LOCATION_NAMES[meetup.location]}</p>
+      <span className={styles.meetupCardStatus}>{meetup.status.toLowerCase()}</span>
+    </li>
   );
 }
 
@@ -80,14 +84,10 @@ function MeetupsPageContent() {
   );
 }
 
-function MeetupCard({ meetup }: { meetup: Meetup }) {
+export default function MeetupsPage() {
   return (
-    <li className={styles.meetupCard}>
-      <span className={styles.meetupCardDot} aria-hidden="true" />
-      <h3>{meetup.personName}</h3>
-      <p>{formatDate(meetup.datetime)}</p>
-      <p>{LOCATION_NAMES[meetup.location]}</p>
-      <span className={styles.meetupCardStatus}>{meetup.status.toLowerCase()}</span>
-    </li>
+    <DemoAuthGate returnTo="/meetups">
+      <MeetupsPageContent />
+    </DemoAuthGate>
   );
 }
