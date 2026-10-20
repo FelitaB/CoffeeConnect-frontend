@@ -1,6 +1,5 @@
 import Link from "next/link";
-import DemoAuthGate, { SignOutButton } from "../auth-gate";
-import CompanyLogo from "../company-logo";
+import DemoAuthGate from "../auth-gate";
 import styles from "../page.module.css";
 import { LOCATION_NAMES, PAST_MEETUPS, UPCOMING_MEETUPS, type Meetup } from "./constants";
 
@@ -26,25 +25,7 @@ function MeetupCard({ meetup }: { meetup: Meetup }) {
 
 function MeetupsPageContent() {
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link className={styles.brand} href="/">
-            <span className={styles.brandMark} aria-hidden="true">C</span>
-            <span>Coffee <span className={styles.brandAccent}>Connect</span></span>
-          </Link>
-          <nav className={styles.homeNav} aria-label="Main navigation">
-            <Link href="/interests">Interests</Link>
-            <Link href="/meetups" aria-current="page">Meetups</Link>
-          </nav>
-          <div className={styles.headerUtility}>
-            <SignOutButton />
-            <Link className={styles.headerHomeLink} href="/">Back to homepage</Link>
-            <CompanyLogo />
-          </div>
-        </div>
-      </header>
-
+    <>
       <main className={`${styles.main} ${styles.meetupsMain}`}>
         <div className={styles.meetupsIntro}>
           <p className={styles.homeEyebrow}>MAKE TIME TO MEET</p>
@@ -72,15 +53,18 @@ function MeetupsPageContent() {
           </ul>
         </section>
 
-        <section className={styles.meetupBanner} aria-label="Find your next coffee match">
+      </main>
+
+      <section className={styles.meetupBanner} aria-label="Find your next coffee match">
+        <div className={styles.bannerInner}>
           <div>
             <h2>Ready to meet someone new?</h2>
             <p>Your next great conversation could be one spin away.</p>
           </div>
           <Link href="/spinwheel">Spin the wheel</Link>
-        </section>
-      </main>
-    </div>
+        </div>
+      </section>
+    </>
   );
 }
 
