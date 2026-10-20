@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import { SESSION_PERSON_KEY } from "@/lib/api";
 import styles from "../page.module.css";
@@ -24,20 +23,7 @@ export default function HomePage() {
   const firstName = useSyncExternalStore(subscribe, getFirstName, () => null);
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link className={styles.brand} href="/">
-            <span className={styles.brandMark} aria-hidden="true">C</span>
-            <span>CoffeeConnect</span>
-          </Link>
-          <div className={styles.headerUtility}>
-            <p>Home</p>
-            <Link className={styles.headerHomeLink} href="/">Back to homepage</Link>
-          </div>
-        </div>
-      </header>
-
+    <>
       <main className={styles.main} id="main-content">
         <section className={styles.registration} aria-labelledby="home-heading">
           <h2 id="home-heading">{firstName ? `Welcome, ${firstName}` : "Welcome"}</h2>
@@ -46,6 +32,6 @@ export default function HomePage() {
           </p>
         </section>
       </main>
-    </div>
+    </>
   );
 }
