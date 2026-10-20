@@ -454,6 +454,23 @@ button.backLink {
   margin-bottom: 1.5rem;
 }
 
+.pendingMatchesSection {
+  margin-top: 1.75rem;
+}
+
+.pendingMatchesHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.pendingMatchesHeader h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
 .spinWheelControls button:disabled,
 .matchActions button:disabled {
   cursor: wait;

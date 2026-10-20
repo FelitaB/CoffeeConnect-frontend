@@ -4,6 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
+import { startDemoSession } from "../auth-gate";
 import CompanyLogo from "../company-logo";
 import { checkEmail, login, SETUP_EMAIL_KEY, storePerson } from "@/lib/api";
 import styles from "../page.module.css";
@@ -61,7 +62,7 @@ export default function SignInPage() {
       setPassword("");
       setShowPassword(false);
       const nextPath = new URLSearchParams(window.location.search).get("next");
-      router.push(nextPath === "/interests" || nextPath === "/meetups" ? nextPath : "/home");
+      router.push(nextPath === "/interests" || nextPath === "/meetups" || nextPath === "/spinwheel" ? nextPath : "/home");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         setPassword("");
