@@ -48,63 +48,11 @@
 
 .skipLink:focus { transform: translateY(0); }
 
-.headerInner,
-.titleRow,
-.sectionInner,
-.feedback,
-.ctaBand,
-.footer {
-  width: min(100% - 4rem, 68rem);
-  margin-inline: auto;
-}
-
-.headerInner {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  min-height: 5.5rem;
-  border-bottom: 1px solid #e3e7db;
-}
-
-.brand {
-  margin-right: auto;
-  color: var(--sage-ink);
-  font-size: 1.15rem;
-  font-weight: 750;
-  text-decoration: none;
-}
-
-.nav { display: flex; flex-wrap: wrap; gap: 1.6rem; }
-.nav a { color: var(--sage-ink); font-size: 0.85rem; text-decoration: none; }
-.nav a[aria-current="page"] { color: var(--orange); font-weight: 700; }
-.nav a:hover { text-decoration: underline; text-underline-offset: 0.3em; }
-
-.sessionAction button {
-  min-height: 2.5rem;
-  padding: 0.5rem 1.25rem;
-  border: none;
-  border-radius: 999px;
-  color: #fff;
-  background: var(--sage-ink);
-  font-size: 0.8rem;
-  font-weight: 650;
-  text-decoration: none;
-}
-
 .titleRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding-block: 3.25rem 2.75rem;
-}
-
-.titleRow h1 {
-  margin: 0;
-  color: var(--sage-ink);
-  font-size: 2.75rem;
-  font-weight: 700;
-  line-height: 1.2;
 }
 
 .refresh {
@@ -118,7 +66,7 @@
   font-size: 0.8rem !important;
 }
 
-.feedback:has(> *) { padding-bottom: 1.5rem; }
+.feedback:has(> *) { margin-top: 0.75rem; }
 .feedback { font-size: 0.9rem; }
 .feedback a { color: var(--orange); }
 .error { color: #9b351f; }
@@ -195,8 +143,7 @@
 
 .primaryButton { color: #fff; background: var(--sage-ink); }
 .completeButton { width: 100%; color: var(--sage-ink); background: transparent; }
-.primaryButton:hover:not(:disabled),
-.sessionAction button:hover { background: #405333; }
+.primaryButton:hover:not(:disabled) { background: #405333; }
 .completeButton:hover:not(:disabled) { background: #eef2e8; }
 .textButton { min-height: 2.4rem; padding: 0.4rem; border: none; color: var(--muted); background: transparent; font-size: 0.78rem !important; text-decoration: underline; text-underline-offset: 0.2em; }
 .confirmation p,
@@ -215,9 +162,5 @@
 }
 
 @media (max-width: 640px) {
-  .titleRow,
-  .feedback { width: 100%; }
-  .titleRow { padding-block: 2rem; }
-  .titleRow h1 { font-size: 2rem; }
   .avatar { margin-top: 1rem; }
 }

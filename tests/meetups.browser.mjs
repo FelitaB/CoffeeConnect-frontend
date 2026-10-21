@@ -183,6 +183,9 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
       assert.equal(boxes[0].top, boxes[2].top);
       assert.ok(boxes[0].right < boxes[1].left && boxes[1].right < boxes[2].left);
       assert.ok(Math.abs(band.left - (band.viewport - band.width) / 2) <= 1, JSON.stringify(band));
+      const edges = await evaluate(`(() => { const box = (element) => element.getBoundingClientRect(); const heading = box(document.querySelector('#meetups-heading')); const refresh = Array.from(document.querySelectorAll('button')).find((button) => button.textContent === 'Refresh'); const firstCard = box(${upcoming}.querySelector('li')); const lastCard = box(${upcoming}.querySelectorAll('li')[2]); return { headingLeft: heading.left, cardLeft: firstCard.left, refreshRight: box(refresh).right, cardRight: lastCard.right }; })()`);
+      assert.ok(Math.abs(edges.headingLeft - edges.cardLeft) <= 1, JSON.stringify(edges));
+      assert.ok(Math.abs(edges.refreshRight - edges.cardRight) <= 1, JSON.stringify(edges));
       await evaluate(`Promise.all(document.getAnimations().map(animation => animation.finished))`);
       await evaluate("document.querySelector('nextjs-portal')?.remove()");
       assert.equal(await evaluate(`getComputedStyle(${upcoming}.querySelector('li')).opacity`), "1");
@@ -252,6 +255,10 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
         assert.deepEqual(layout.overflow, [], JSON.stringify(layout));
         const band = await evaluate(`(() => { const rect = ${upcoming}.getBoundingClientRect(); return { left: rect.left, right: rect.right, width: rect.width, viewport: document.documentElement.clientWidth }; })()`);
         assert.ok(Math.abs(band.left - (band.viewport - band.width) / 2) <= 1, JSON.stringify(band));
+        const gutters = await evaluate(`(() => { const grid = ${upcoming}.querySelector('ul').getBoundingClientRect(); const viewport = document.documentElement.clientWidth; return { left: grid.left, right: viewport - grid.right, viewport }; })()`);
+        assert.ok(gutters.left >= 8 && Math.abs(gutters.left - gutters.right) <= 1, JSON.stringify(gutters));
+        const edge = await evaluate(`(() => { const viewport = document.documentElement.clientWidth; const refresh = Array.from(document.querySelectorAll('button')).find((button) => button.textContent === 'Refresh').getBoundingClientRect(); const count = ${upcoming}.querySelector('h2 + span').getBoundingClientRect(); return { viewport, refreshRightGutter: viewport - refresh.right, countRightGutter: viewport - count.right }; })()`);
+        assert.ok(edge.refreshRightGutter >= 8 && edge.countRightGutter >= 8, JSON.stringify(edge));
         if (width === 390) {
           await evaluate(`Promise.all(document.getAnimations().map(animation => animation.finished))`);
           const image = await send("Page.captureScreenshot", { format: "png", captureBeyondViewport: true });
