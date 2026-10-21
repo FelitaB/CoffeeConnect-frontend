@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState, type TransitionEvent } from "react";
 import { apiClient, SESSION_PERSON_KEY, type Person } from "@/lib/api";
-import DemoAuthGate from "../auth-gate";
+import DemoAuthGate from "@/components/auth-gate";
 import styles from "../page.module.css";
 
 type SpinPhase = "ready" | "loading" | "spinning" | "result" | "accepting" | "accepted" | "declining" | "empty";

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState, useSyncExternalStore } from "react";
 import { SETUP_EMAIL_KEY, setPassword, storePerson } from "@/lib/api";
-import { startDemoSession } from "../auth-gate";
+import { startDemoSession } from "@/components/auth-gate";
 import styles from "../page.module.css";
 
 function subscribe() {

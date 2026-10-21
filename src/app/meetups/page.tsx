@@ -1,5 +1,5 @@
 import Link from "next/link";
-import DemoAuthGate from "../auth-gate";
+import DemoAuthGate from "@/components/auth-gate";
 import styles from "../page.module.css";
 import { LOCATION_NAMES, PAST_MEETUPS, UPCOMING_MEETUPS, type Meetup } from "./constants";
 

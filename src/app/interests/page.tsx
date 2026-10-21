@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useState } from "react";
 import { getStoredPerson, saveInterests, storePerson } from "@/lib/api";
-import DemoAuthGate from "../auth-gate";
+import DemoAuthGate from "@/components/auth-gate";
 import { INTERESTS, type Interest } from "./constants";
 import styles from "../page.module.css";
 
