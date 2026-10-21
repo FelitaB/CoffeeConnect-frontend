@@ -31,9 +31,19 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 The CoffeeConnect brand link on each page returns to `/`.
 
+## Shared Components
+
+Reusable components live in `src/components` and are imported with the `@/components/...` alias:
+
+- `site-header/`: the site header and navigation links.
+- `company-logo.tsx`: the company logo shown in the header.
+- `auth-gate.tsx`: the demo sign-in gate for protected pages, plus the sign-out button and demo session helpers.
+
+Route pages stay in `src/app`.
+
 ## Shared Navigation and Layout
 
-The root layout renders `src/app/site-header.tsx` on every page, including sign-in,
+The root layout renders `src/components/site-header/site-header.tsx` on every page, including sign-in,
 registration, account setup and protected-page loading states. Keep navigation
 changes in that shared component rather than adding headers to individual pages.
 The current page is marked with `aria-current="page"` and an orange active style.
