@@ -26,6 +26,14 @@ export function startDemoSession() {
   window.dispatchEvent(new Event(DEMO_SESSION_CHANGE_EVENT));
 }
 
+export function useDemoSession() {
+  return useSyncExternalStore(
+    subscribeToDemoSession,
+    getDemoSessionSnapshot,
+    getServerDemoSessionSnapshot,
+  );
+}
+
 type ProtectedPath = "/interests" | "/meetups" | "/spinwheel";
 
 type DemoAuthGateProps = {
@@ -35,11 +43,7 @@ type DemoAuthGateProps = {
 
 export default function DemoAuthGate({ children, returnTo }: DemoAuthGateProps) {
   const router = useRouter();
-  const authorized = useSyncExternalStore(
-    subscribeToDemoSession,
-    getDemoSessionSnapshot,
-    getServerDemoSessionSnapshot,
-  );
+  const authorized = useDemoSession();
 
   useEffect(() => {
     if (window.sessionStorage.getItem(DEMO_SESSION_KEY) !== "active") {

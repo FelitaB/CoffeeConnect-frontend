@@ -1,38 +1,7 @@
 import Link from "next/link";
-import DemoAuthGate, { SignOutButton } from "../auth-gate";
-import CompanyLogo from "../company-logo";
+import DemoAuthGate from "../auth-gate";
 import styles from "../page.module.css";
-
-type Meetup = {
-  id: string;
-  personName: string;
-  location: "LONDON" | "MANCHESTER" | "BELFAST";
-  datetime: number;
-  status: "PENDING" | "ACCEPTED" | "DECLINED" | "COMPLETED";
-};
-
-const LOCATION_NAMES: Record<Meetup["location"], string> = {
-  LONDON: "London Office",
-  MANCHESTER: "Manchester Office",
-  BELFAST: "Belfast Office",
-};
-
-const MOCK_MEETUPS: Meetup[] = [
-  {
-    id: "meetup-1",
-    personName: "Amelia Khan",
-    location: "LONDON",
-    datetime: Date.UTC(2026, 9, 20, 10, 30) / 1000,
-    status: "ACCEPTED",
-  },
-  {
-    id: "meetup-2",
-    personName: "Daniel Murphy",
-    location: "BELFAST",
-    datetime: Date.UTC(2026, 9, 22, 13, 0) / 1000,
-    status: "PENDING",
-  },
-];
+import { LOCATION_NAMES, PAST_MEETUPS, UPCOMING_MEETUPS, type Meetup } from "./constants";
 
 function formatDate(datetime: number) {
   return new Intl.DateTimeFormat("en-GB", {
@@ -42,69 +11,71 @@ function formatDate(datetime: number) {
   }).format(new Date(datetime * 1000));
 }
 
-export default function MeetupsPage() {
+function MeetupCard({ meetup }: { meetup: Meetup }) {
   return (
-    <DemoAuthGate returnTo="/meetups">
-      <MeetupsPageContent />
-    </DemoAuthGate>
+    <li className={styles.meetupCard}>
+      <span className={styles.meetupCardDot} aria-hidden="true" />
+      <h3>{meetup.personName}</h3>
+      <p>{formatDate(meetup.datetime)}</p>
+      <p>{LOCATION_NAMES[meetup.location]}</p>
+      <span className={styles.meetupCardStatus}>{meetup.status.toLowerCase()}</span>
+    </li>
   );
 }
 
 function MeetupsPageContent() {
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link className={styles.brand} href="/">
-            <span className={styles.brandMark} aria-hidden="true">C</span>
-            <span>CoffeeConnect</span>
-          </Link>
-          <div className={styles.headerUtility}>
-            <p>Your coffee meetups</p>
-            <SignOutButton />
-            <CompanyLogo />
-          </div>
-        </div>
-      </header>
-
-      <main className={styles.main}>
-        <section className={styles.registration} aria-labelledby="meetups-heading">
-          <h1 id="meetups-heading">My meetups</h1>
-          <p className={styles.registrationIntro}>
-            See who you’re meeting, and when and where.
-          </p>
+    <>
+      <main className={`${styles.main} ${styles.meetupsMain}`}>
+        <div className={styles.meetupsIntro}>
+          <p className={styles.homeEyebrow}>MAKE TIME TO MEET</p>
+          <h1 id="meetups-heading">Your Meetups</h1>
+          <p>See who you’re meeting, and when and where.</p>
           <p className={styles.status} role="status">
             Demo data only. These meetups aren’t connected to your account.
           </p>
-
           <Link className={styles.newCoffeeChatButton} href="/spinwheel">
-            New CoffeeChat
+            Find a coffee match
           </Link>
+        </div>
 
-          <ul className={styles.meetupList}>
-            {MOCK_MEETUPS.map((meetup) => (
-              <li className={styles.meetupItem} key={meetup.id}>
-                <div>
-                  <h2 className={styles.meetupName}>
-                    Coffee with {meetup.personName}
-                  </h2>
-                  <p className={styles.meetupMeta}>
-                    {LOCATION_NAMES[meetup.location]} ·{" "}
-                    <time dateTime={new Date(meetup.datetime * 1000).toISOString()}>
-                      {formatDate(meetup.datetime)}
-                    </time>
-                  </p>
-                </div>
-                <span className={styles.meetupStatus}>
-                  {meetup.status.toLowerCase()}
-                </span>
-              </li>
-            ))}
-          </ul>
-
-          <Link className={styles.backLink} href="/interests">Update interests</Link>
+        <section className={styles.meetupSection} aria-labelledby="upcoming-heading">
+          <div className={styles.meetupBandInner}>
+            <h2 id="upcoming-heading">Upcoming</h2>
+            <ul className={styles.meetupCards}>
+              {UPCOMING_MEETUPS.map((meetup) => <MeetupCard key={meetup.id} meetup={meetup} />)}
+            </ul>
+          </div>
         </section>
+
+        <section className={`${styles.meetupSection} ${styles.pastMeetupSection}`} aria-labelledby="past-heading">
+          <div className={styles.meetupBandInner}>
+            <h2 id="past-heading">Past Meetups</h2>
+            <ul className={styles.meetupCards}>
+              {PAST_MEETUPS.map((meetup) => <MeetupCard key={meetup.id} meetup={meetup} />)}
+            </ul>
+          </div>
+        </section>
+
       </main>
-    </div>
+
+      <section className={styles.meetupBanner} aria-label="Find your next coffee match">
+        <div className={styles.bannerInner}>
+          <div>
+            <h2>Ready to meet someone new?</h2>
+            <p>Your next great conversation could be one spin away.</p>
+          </div>
+          <Link href="/spinwheel">Spin the wheel</Link>
+        </div>
+      </section>
+    </>
+  );
+}
+
+export default function MeetupsPage() {
+  return (
+    <DemoAuthGate returnTo="/meetups">
+      <MeetupsPageContent />
+    </DemoAuthGate>
   );
 }
