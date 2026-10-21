@@ -79,9 +79,8 @@ demo route gate, and shared site header.
 	accept the offer, accept the incoming request in the second account, then mark the
 	accepted match completed. Refresh both accounts and check their history.
 
-The upstream website update includes the missing `startDemoSession` import. The isolated
-browser checks below bypass sign-in only in a disposable test profile; they are not a
-replacement for a real two-account integration test.
+The isolated browser checks below bypass sign-in only in a disposable test profile; they
+are not a replacement for a real two-account integration test.
 
 If Meetups reports that `Match.completed_at` does not exist, check the backend's
 configured database and migration status using its README. Regenerating the client
@@ -102,9 +101,19 @@ installs no packages. Start the frontend first; `MEETUPS_TEST_URL` overrides
 It checks completion, accept/decline, error/retry/empty states, contact links, and
 desktop/tablet/mobile layouts, and writes screenshots into a temporary directory.
 
+## Shared Components
+
+Reusable components live in `src/components` and are imported with the `@/components/...` alias:
+
+- `site-header/`: the site header and navigation links.
+- `company-logo.tsx`: the company logo shown in the header.
+- `auth-gate.tsx`: the demo sign-in gate for protected pages, plus the sign-out button and demo session helpers.
+
+Route pages stay in `src/app`.
+
 ## Shared Navigation and Layout
 
-The root layout renders `src/app/site-header/site-header.tsx` on every page, including sign-in,
+The root layout renders `src/components/site-header/site-header.tsx` on every page, including sign-in,
 registration, account setup and protected-page loading states. Keep navigation
 changes in that shared component rather than adding headers to individual pages.
 The current page is marked with `aria-current="page"` and an orange active style.
@@ -122,6 +131,8 @@ Requests to the backend go through the shared axios instance in `src/lib/api.ts`
 ## Sign-In
 
 The `/sign-in` page asks for a PA work email first and sends it to `POST /api/people/check-email`. If the response is `{ registered: true }`, a password field appears. Otherwise the user is sent to `/setup-existing-user`. The password is checked with `POST /api/people/login`. On success, the returned person (without the password hash) is stored in `sessionStorage` under `coffee-connect-person` and the temporary demo marker is set for the existing route gates. The user is sent to `/home`, or to `/interests`, `/meetups` or `/spinwheel` if that route was requested through the `next` query parameter. Failed sign-ins do not grant access or redirect. This is temporary until proper sessions are added.
+
+For existing accounts awaiting setup, `/setup-existing-user` asks for the user's 5-digit ID and checks it against the email using `POST /api/people/verify-setup-identity`. Only a successful match reveals the password form. Password creation submits both the email and user ID to `POST /api/people/set-password`, which checks the match again before saving.
 
 ## Interests
 

@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { SignOutButton, useDemoSession } from "../auth-gate";
-import CompanyLogo from "../company-logo";
+import { SignOutButton, useDemoSession } from "@/components/auth-gate";
+import CompanyLogo from "@/components/company-logo";
 import { NAV_LINKS } from "./constants";
 import styles from "./site-header.module.css";
 

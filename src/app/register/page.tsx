@@ -5,7 +5,7 @@ import Link from "next/link";
 import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createPerson, type Person, SETUP_EMAIL_KEY, setPassword, storePerson } from "@/lib/api";
-import { startDemoSession } from "../auth-gate";
+import { startDemoSession } from "@/components/auth-gate";
 import { JOB_CAPABILITIES, JOB_GO_TO_MARKETS, JOB_ROLES } from "./constants";
 import styles from "../page.module.css";
 
@@ -83,7 +83,7 @@ export default function RegisterPage() {
         sessionStorage.setItem(SETUP_EMAIL_KEY, person.email);
       }
 
-      const updatedPerson = await setPassword(person.email, password);
+      const updatedPerson = await setPassword(person.email, password, String(person.id));
       storePerson(updatedPerson);
       startDemoSession();
       sessionStorage.removeItem(SETUP_EMAIL_KEY);

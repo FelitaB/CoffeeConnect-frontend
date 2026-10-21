@@ -4,7 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
-import { startDemoSession } from "../auth-gate";
+import { startDemoSession } from "@/components/auth-gate";
 import { checkEmail, login, SETUP_EMAIL_KEY, storePerson } from "@/lib/api";
 import styles from "../page.module.css";
 

@@ -4,8 +4,8 @@ import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getStoredPerson, type Person } from "@/lib/api";
+import DemoAuthGate from "@/components/auth-gate";
 import { fetchMeetups, respondToMeetup, type Meetup, type MeetupAction } from "@/lib/meetups";
-import DemoAuthGate from "../auth-gate";
 import styles from "./meetups.module.css";
 import pageStyles from "../page.module.css";
 

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useSyncExternalStore, type ReactNode } from "react";
 import { SESSION_PERSON_KEY, SETUP_EMAIL_KEY } from "@/lib/api";
-import styles from "./page.module.css";
+import styles from "@/app/page.module.css";
 
 export const DEMO_SESSION_KEY = "coffee-connect-demo-session";
 const DEMO_SESSION_CHANGE_EVENT = "coffee-connect-demo-session-change";
