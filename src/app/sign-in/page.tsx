@@ -4,8 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
-import { startDemoSession } from "../auth-gate";
-import CompanyLogo from "../company-logo";
+import { startDemoSession } from "@/components/auth-gate";
 import { checkEmail, login, SETUP_EMAIL_KEY, storePerson } from "@/lib/api";
 import styles from "../page.module.css";
 
@@ -103,20 +102,7 @@ export default function SignInPage() {
   }
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link className={styles.brand} href="/">
-            <span className={styles.brandMark} aria-hidden="true">C</span>
-            <span>CoffeeConnect</span>
-          </Link>
-          <div className={styles.headerUtility}>
-            <Link className={styles.headerHomeLink} href="/">Back to homepage</Link>
-            <CompanyLogo />
-          </div>
-        </div>
-      </header>
-
+    <>
       <main className={styles.main} id="main-content">
         <section className={styles.registration} aria-labelledby="sign-in-heading">
           <h2 id="sign-in-heading">Sign in</h2>
@@ -144,7 +130,7 @@ export default function SignInPage() {
                   }}
                   required
                 />
-              </div>
+                        </div>
             ) : (
               <>
                 <input type="hidden" name="email" autoComplete="username" value={email} />
@@ -194,6 +180,6 @@ export default function SignInPage() {
           )}
         </section>
       </main>
-    </div>
+    </>
   );
 }

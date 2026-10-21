@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState, type TransitionEvent } from "react";
 import { apiClient, SESSION_PERSON_KEY, type Person } from "@/lib/api";
-import DemoAuthGate, { SignOutButton } from "../auth-gate";
-import CompanyLogo from "../company-logo";
+import DemoAuthGate from "@/components/auth-gate";
 import styles from "../page.module.css";
 
 type SpinPhase = "ready" | "loading" | "spinning" | "result" | "accepting" | "declining" | "empty" | "limit";
@@ -249,22 +248,7 @@ export default function SpinwheelPage() {
 
   return (
     <DemoAuthGate returnTo="/spinwheel">
-      <div className={styles.page}>
-        <header className={styles.header}>
-          <div className={styles.headerInner}>
-            <Link className={styles.brand} href="/">
-              <span className={styles.brandMark} aria-hidden="true">C</span>
-              <span>CoffeeConnect</span>
-            </Link>
-            <div className={styles.headerUtility}>
-              <p>New CoffeeChat</p>
-              <SignOutButton />
-              <CompanyLogo />
-            </div>
-          </div>
-        </header>
-
-        <main className={styles.main}>
+        <main className={styles.main} id="main-content">
           <section className={styles.registration} aria-labelledby="spinwheel-heading">
             <h1 id="spinwheel-heading">Spin the wheel</h1>
             <p className={styles.registrationIntro}>
@@ -280,7 +264,7 @@ export default function SpinwheelPage() {
                 aria-hidden="true"
               >
                 <span className={styles.spinWheelHub}>C</span>
-              </div>
+            </div>
             </div>
 
             {showSpinControl && (
@@ -380,7 +364,6 @@ export default function SpinwheelPage() {
             <Link className={styles.backLink} href="/meetups">Back to meetups</Link>
           </section>
         </main>
-      </div>
     </DemoAuthGate>
   );
 }

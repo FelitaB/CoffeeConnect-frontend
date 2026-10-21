@@ -38,8 +38,13 @@ export async function login(email: string, password: string): Promise<Person> {
   return data;
 }
 
-export async function setPassword(email: string, password: string): Promise<Person> {
-  const { data } = await apiClient.post<Person>("/people/set-password", { email, password });
+export async function verifySetupIdentity(email: string, userId: string): Promise<{ verified: boolean }> {
+  const { data } = await apiClient.post<{ verified: boolean }>("/people/verify-setup-identity", { email, user_id: userId });
+  return data;
+}
+
+export async function setPassword(email: string, password: string, userId: string): Promise<Person> {
+  const { data } = await apiClient.post<Person>("/people/set-password", { email, password, user_id: userId });
   return data;
 }
 
