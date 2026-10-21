@@ -174,8 +174,10 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
 
     await context.test("desktop layout has three columns and no overlapping cards", async () => {
       const boxes = await evaluate(`Array.from(${upcoming}.querySelectorAll('li')).map(item => { const rect = item.getBoundingClientRect(); return { left: rect.left, right: rect.right, top: rect.top }; })`);
+      const band = await evaluate(`(() => { const element = ${upcoming}; const rect = element.getBoundingClientRect(); return { left: rect.left, right: rect.right, width: rect.width, viewport: document.documentElement.clientWidth }; })()`);
       assert.equal(boxes[0].top, boxes[2].top);
       assert.ok(boxes[0].right < boxes[1].left && boxes[1].right < boxes[2].left);
+      assert.ok(Math.abs(band.left - (band.viewport - band.width) / 2) <= 1, JSON.stringify(band));
       await evaluate(`Promise.all(document.getAnimations().map(animation => animation.finished))`);
       await evaluate("document.querySelector('nextjs-portal')?.remove()");
       assert.equal(await evaluate(`getComputedStyle(${upcoming}.querySelector('li')).opacity`), "1");
@@ -240,9 +242,11 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
       for (const width of [768, 390, 320]) {
         await send("Emulation.setDeviceMetricsOverride", { width, height: 844, deviceScaleFactor: 1, mobile: false });
         await evaluate(`document.querySelector('details').open = true`);
-        const layout = await evaluate(`({ width: innerWidth, scroll: document.documentElement.scrollWidth, overflow: Array.from(document.querySelectorAll('main *')).filter(element => { const box = element.getBoundingClientRect(); return box.width > 0 && (box.right > innerWidth + 1 || box.left < -1 || element.scrollWidth > element.clientWidth + 2); }).map(element => element.tagName + ':' + element.className) })`);
+        const layout = await evaluate(`({ width: innerWidth, scroll: document.documentElement.scrollWidth, overflow: Array.from(document.querySelectorAll('header *, main *')).filter(element => { const box = element.getBoundingClientRect(); const fullBleedBand = element.matches('section[aria-labelledby="upcoming-heading"], section[aria-labelledby="past-heading"]'); return !fullBleedBand && box.width > 0 && (box.right > innerWidth + 1 || box.left < -1 || element.scrollWidth > element.clientWidth + 2); }).map(element => element.tagName + ':' + element.className) })`);
         assert.ok(layout.scroll <= width, JSON.stringify(layout));
         assert.deepEqual(layout.overflow, [], JSON.stringify(layout));
+        const band = await evaluate(`(() => { const rect = ${upcoming}.getBoundingClientRect(); return { left: rect.left, right: rect.right, width: rect.width, viewport: document.documentElement.clientWidth }; })()`);
+        assert.ok(Math.abs(band.left - (band.viewport - band.width) / 2) <= 1, JSON.stringify(band));
         if (width === 390) {
           await evaluate(`Promise.all(document.getAnimations().map(animation => animation.finished))`);
           const image = await send("Page.captureScreenshot", { format: "png", captureBeyondViewport: true });
