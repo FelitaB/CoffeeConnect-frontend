@@ -83,7 +83,7 @@ export default function RegisterPage() {
         sessionStorage.setItem(SETUP_EMAIL_KEY, person.email);
       }
 
-      const updatedPerson = await setPassword(person.email, password);
+      const updatedPerson = await setPassword(person.email, password, String(person.id));
       storePerson(updatedPerson);
       startDemoSession();
       sessionStorage.removeItem(SETUP_EMAIL_KEY);

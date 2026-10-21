@@ -52,6 +52,8 @@ Requests to the backend go through the shared axios instance in `src/lib/api.ts`
 
 The `/sign-in` page asks for a PA work email first and sends it to `POST /api/people/check-email`. If the response is `{ registered: true }`, a password field appears. Otherwise the user is sent to `/setup-existing-user`. The password is checked with `POST /api/people/login`. On success, the returned person (without the password hash) is stored in `sessionStorage` under `coffee-connect-person` and the temporary demo marker is set for the existing route gates. The user is sent to `/home`, or to `/interests`, `/meetups` or `/spinwheel` if that route was requested through the `next` query parameter. Failed sign-ins do not grant access or redirect. This is temporary until proper sessions are added.
 
+For existing accounts awaiting setup, `/setup-existing-user` asks for the user's 5-digit ID and checks it against the email using `POST /api/people/verify-setup-identity`. Only a successful match reveals the password form. Password creation submits both the email and user ID to `POST /api/people/set-password`, which checks the match again before saving.
+
 ## Offline Interests Prototype
 
 The `/register` page also grants the temporary demo marker after valid form submission so the prototype can continue to `/interests`; it does not create an account or store credentials. The `/interests` page loads local mock objects in `useEffect`; it makes no API requests and does not connect to MySQL. The provisional object shape is `{ interest_id: number, name: string }`. All mock IDs are placeholders, not database IDs.
