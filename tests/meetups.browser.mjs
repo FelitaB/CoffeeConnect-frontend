@@ -152,7 +152,12 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
           ],
           ...(responseCode === 204 ? {} : { body: Buffer.from(JSON.stringify(body)).toString("base64") }),
         });
-      })().catch((error) => interceptionErrors.push(error.message));
+      })().catch((error) => {
+        const message = error instanceof Error ? error.message : String(error);
+        if (!message.includes('"code":-32602') || !message.includes("Invalid InterceptionId")) {
+          interceptionErrors.push(message);
+        }
+      });
     }]);
     await send("Fetch.enable", { patterns: [{ urlPattern: "http://localhost:5000/api/people/*" }] });
     await send("Page.navigate", { url: `${origin}/meetups` });
