@@ -4,49 +4,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useState } from "react";
 import { getStoredPerson, saveInterests, storePerson } from "@/lib/api";
-import DemoAuthGate, { SignOutButton } from "../auth-gate";
-import CompanyLogo from "../company-logo";
+import DemoAuthGate from "../auth-gate";
+import { INTERESTS, type Interest } from "./constants";
 import styles from "../page.module.css";
-
-type Interest = {
-  interest_id: number;
-  name: string;
-};
-
-const INTERESTS: Interest[] = [
-  { interest_id: 1, name: "Coffee and cafes" },
-  { interest_id: 2, name: "Cooking and food" },
-  { interest_id: 3, name: "Books and reading" },
-  { interest_id: 4, name: "Hiking and outdoors" },
-  { interest_id: 5, name: "Travel" },
-  { interest_id: 6, name: "Music and live events" },
-  { interest_id: 7, name: "Photography" },
-  { interest_id: 8, name: "Board games" },
-  { interest_id: 9, name: "Fitness and running" },
-  { interest_id: 10, name: "Technology" },
-  { interest_id: 11, name: "Art and design" },
-  { interest_id: 12, name: "Gardening" },
-  { interest_id: 13, name: "Video Games" },
-  { interest_id: 14, name: "Movies and TV" },
-  { interest_id: 15, name: "Podcasts" },
-  { interest_id: 16, name: "Sports" },
-  { interest_id: 17, name: "Cycling" },
-  { interest_id: 18, name: "Volunteering" },
-  { interest_id: 19, name: "Languages" },
-  { interest_id: 20, name: "History" },
-  { interest_id: 21, name: "Personal finance" },
-  { interest_id: 22, name: "Entrepreneurship" },
-  { interest_id: 23, name: "Mindfulness" },
-  { interest_id: 24, name: "Pets" },
-];
-
-export default function InterestsPage() {
-  return (
-    <DemoAuthGate returnTo="/interests">
-      <InterestsPageContent />
-    </DemoAuthGate>
-  );
-}
 
 function InterestsPageContent() {
   const router = useRouter();
@@ -132,21 +92,7 @@ function InterestsPageContent() {
   }
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link className={styles.brand} href="/">
-            <span className={styles.brandMark} aria-hidden="true">C</span>
-            <span>CoffeeConnect</span>
-          </Link>
-          <div className={styles.headerUtility}>
-            <p>Build your profile</p>
-            <SignOutButton />
-            <CompanyLogo />
-          </div>
-        </div>
-      </header>
-
+    <>
       <main className={styles.main} id="main-content">
         <section className={styles.registration} aria-labelledby="interests-heading">
           <h2 id="interests-heading">Choose your interests</h2>
@@ -200,7 +146,7 @@ function InterestsPageContent() {
                         </label>
                       );
                     })}
-                  </div>
+                                </div>
                 </details>
               )}
               <p className={styles.interestGuidance} id="interest-guidance">
@@ -219,6 +165,14 @@ function InterestsPageContent() {
           <Link className={styles.backLink} href="/sign-in">Back to sign in</Link>
         </section>
       </main>
-    </div>
+    </>
+  );
+}
+
+export default function InterestsPage() {
+  return (
+    <DemoAuthGate returnTo="/interests">
+      <InterestsPageContent />
+    </DemoAuthGate>
   );
 }

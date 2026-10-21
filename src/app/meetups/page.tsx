@@ -5,8 +5,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getStoredPerson, type Person } from "@/lib/api";
 import { fetchMeetups, respondToMeetup, type Meetup, type MeetupAction } from "@/lib/meetups";
-import DemoAuthGate, { SignOutButton } from "../auth-gate";
+import DemoAuthGate from "../auth-gate";
 import styles from "./meetups.module.css";
+import pageStyles from "../page.module.css";
 
 const LOCATIONS: Record<string, string> = {
   LONDON: "London", MANCHESTER: "Manchester", BELFAST: "Belfast",
@@ -23,10 +24,6 @@ function formatDate(value: string) {
   return new Intl.DateTimeFormat("en-GB", {
     day: "numeric", month: "short", year: "numeric", timeZone: "Europe/London",
   }).format(new Date(value));
-}
-
-export default function MeetupsPage() {
-  return <DemoAuthGate returnTo="/meetups"><MeetupsContent /></DemoAuthGate>;
 }
 
 function MeetupsContent() {
@@ -97,7 +94,7 @@ function MeetupsContent() {
 
   function renderCards(entries: Meetup[]) {
     return (
-      <ul className={styles.grid}>
+      <ul className={pageStyles.meetupCards}>
         {entries.map((meetup, index) => (
           <MeetupCard key={meetup.id} meetup={meetup} index={index} person={person!}
             disabled={busyId !== null || loading} busy={busyId === meetup.id} confirming={confirmId === meetup.id}
@@ -111,55 +108,46 @@ function MeetupsContent() {
   return (
     <div className={styles.page}>
       <a className={styles.skipLink} href="#main-content">Skip to meetups</a>
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link className={styles.brand} href="/">COFFEE CONNECT</Link>
-          <nav className={styles.nav} aria-label="Main navigation">
-            <Link href="/home">Home</Link>
-            <Link href="/meetups" aria-current="page">Meetups</Link>
-            <Link href="/interests">Personal</Link>
-          </nav>
-          <div className={styles.sessionAction}><SignOutButton /></div>
+      <main className={pageStyles.meetupsMain} id="main-content">
+        <div className={pageStyles.meetupsIntro}>
+          <p className={pageStyles.homeEyebrow}>MAKE TIME TO MEET</p>
+          <div className={styles.titleRow}>
+            <h1 id="meetups-heading">Your Meetups</h1>
+            {person && <button className={styles.refresh} type="button" onClick={refresh} disabled={loading || busyId !== null}>{loading ? "Refreshing..." : "Refresh"}</button>}
+          </div>
+          <p>See who you’re meeting, and when and where.</p>
+          <div className={styles.feedback}>
+            {!person && <p role="alert">Your profile could not be found. <Link href="/sign-in?next=%2Fmeetups">Sign in again</Link>.</p>}
+            {person && loading && <p role="status">Loading your meetups...</p>}
+            {loadError && <div className={styles.error} role="alert"><p>{loadError}</p><button type="button" onClick={refresh}>Try again</button></div>}
+            {actionError && <p className={styles.error} role="alert">{actionError} Refresh to check the latest match status.</p>}
+            {notice && <p className={styles.notice} role="status">{notice}</p>}
+          </div>
         </div>
-      </header>
-      <main id="main-content">
-        <div className={styles.titleRow}>
-          <h1>Your Meetups</h1>
-          {person && <button className={styles.refresh} type="button" onClick={refresh} disabled={loading || busyId !== null}>{loading ? "Refreshing..." : "Refresh"}</button>}
-        </div>
-        <div className={styles.feedback}>
-          {!person && <p role="alert">Your profile could not be found. <Link href="/sign-in?next=%2Fmeetups">Sign in again</Link>.</p>}
-          {person && loading && <p role="status">Loading your meetups...</p>}
-          {loadError && <div className={styles.error} role="alert"><p>{loadError}</p><button type="button" onClick={refresh}>Try again</button></div>}
-          {actionError && <p className={styles.error} role="alert">{actionError} Refresh to check the latest match status.</p>}
-          {notice && <p role="status">{notice}</p>}
-        </div>
-        <section className={styles.upcoming} aria-labelledby="upcoming-heading" aria-busy={loading && Boolean(person)}>
-          <div className={styles.sectionInner}>
-            <div className={styles.sectionHeading}><h2 id="upcoming-heading">Upcoming</h2>{!unavailable && <span className={styles.count}>{upcoming.length.toString().padStart(2, "0")}</span>}</div>
+        <section className={pageStyles.meetupSection} aria-labelledby="upcoming-heading" aria-busy={loading && Boolean(person)}>
+          <div className={pageStyles.meetupBandInner}>
+            <div className={styles.sectionHeading}><h2 id="upcoming-heading">Upcoming</h2>{!unavailable && <span>{upcoming.length.toString().padStart(2, "0")}</span>}</div>
             {!unavailable && (upcoming.length ? renderCards(upcoming) : <div className={styles.empty}><h3>No upcoming meetups</h3><Link href="/spinwheel">Find your next coffee match</Link></div>)}
             {unavailable && <div className={styles.placeholder} aria-hidden="true" />}
           </div>
         </section>
-        <section className={styles.past} aria-labelledby="past-heading" aria-busy={loading && Boolean(person)}>
-          <div className={styles.sectionInner}>
-            <div className={styles.sectionHeading}><h2 id="past-heading">Past Meetups</h2>{!unavailable && <span className={styles.count}>{past.length.toString().padStart(2, "0")}</span>}</div>
+        <section className={`${pageStyles.meetupSection} ${pageStyles.pastMeetupSection}`} aria-labelledby="past-heading" aria-busy={loading && Boolean(person)}>
+          <div className={pageStyles.meetupBandInner}>
+            <div className={styles.sectionHeading}><h2 id="past-heading">Past Meetups</h2>{!unavailable && <span>{past.length.toString().padStart(2, "0")}</span>}</div>
             {!unavailable && (past.length ? renderCards(past) : <div className={styles.empty}><h3>No completed calls yet</h3></div>)}
             {unavailable && <div className={styles.placeholder} aria-hidden="true" />}
           </div>
         </section>
-        <div className={styles.ctaBand}>
-          <section className={styles.cta} aria-labelledby="new-meetup-heading">
-            <div><h2 id="new-meetup-heading">Ready to meet someone new?</h2><p>Your next great conversation could be one spin away.</p></div>
-            <Link href="/spinwheel">Spin the wheel <span aria-hidden="true">&rarr;</span></Link>
-          </section>
-        </div>
       </main>
-      <footer className={styles.footer}>Coffee Connect &middot; Meet someone new over a brew.</footer>
+      <section className={pageStyles.meetupBanner} aria-label="Find your next coffee match">
+        <div className={pageStyles.bannerInner}>
+          <div><h2>Ready to meet someone new?</h2><p>Your next great conversation could be one spin away.</p></div>
+          <Link href="/spinwheel">Spin the wheel</Link>
+        </div>
+      </section>
     </div>
   );
 }
-
 type MeetupCardProps = {
   meetup: Meetup;
   index: number;
@@ -217,4 +205,8 @@ function MeetupCard({ meetup, index, person, disabled, busy, confirming, onConfi
       </article>
     </li>
   );
+}
+
+export default function MeetupsPage() {
+  return <DemoAuthGate returnTo="/meetups"><MeetupsContent /></DemoAuthGate>;
 }

@@ -161,6 +161,8 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
     await waitFor(`${upcoming}?.querySelectorAll('article').length === 3`);
 
     await context.test("loads account-specific cards, shared interests, history order, and contact links", async () => {
+      assert.equal(await evaluate("document.querySelectorAll('header').length"), 1);
+      assert.equal(await evaluate("document.querySelector('[aria-label=\"Main navigation\"] a[aria-current=\"page\"]')?.textContent"), "Meetups");
       assert.equal(await evaluate(`${past}.querySelectorAll('article').length`), 3);
       assert.equal(await evaluate(`${past}.querySelector('h3').textContent`), "Priya Example");
       assert.ok(await evaluate(`${upcoming}.textContent.includes('Coffee and cafes, Board games')`));
@@ -175,6 +177,7 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
       assert.equal(boxes[0].top, boxes[2].top);
       assert.ok(boxes[0].right < boxes[1].left && boxes[1].right < boxes[2].left);
       await evaluate(`Promise.all(document.getAnimations().map(animation => animation.finished))`);
+      await evaluate("document.querySelector('nextjs-portal')?.remove()");
       assert.equal(await evaluate(`getComputedStyle(${upcoming}.querySelector('li')).opacity`), "1");
       const image = await send("Page.captureScreenshot", { format: "png", captureBeyondViewport: true });
       writeFileSync(join(artifacts, "desktop.png"), Buffer.from(image.data, "base64"));

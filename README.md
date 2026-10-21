@@ -36,20 +36,20 @@ The CoffeeConnect brand link on each page returns to `/`.
 ## Meetups And Call History
 
 `/meetups` uses real account-specific Match records from the backend rather than
-hard-coded sample people. The page follows the sage/orange design reference with
-Upcoming and Past Meetups sections, responsive colleague cards, and a spin action.
+hard-coded sample people. The page follows the current sage-green website design
+and uses its shared navigation, with Upcoming and Past Meetups, responsive
+colleague cards, and a spin action.
 Pending matches show whether the signed-in person needs to respond or is awaiting
 their colleague. Accepted matches can be marked completed by either participant
 after a confirmation step. The history shows the confirmation date, colleague
 details, shared interests, and Email/Teams links. These links open the chosen app;
 they do not send messages or inspect Teams call logs. There is no scheduling UI.
 
-The backend must have the reviewed `add_match_completion` migration applied to its
+The backend must have the `add_match_completion` migration applied to its
 intended database before these endpoints can be used. Branches do not isolate
 databases; do not migrate a shared database just to preview this page. Until then,
-the page shows a request error, not fake data. Authentication files are unchanged;
-the existing stored profile and demo route gate are reused. The existing sign-in
-import error remains outside this feature's scope.
+the page shows a request error, not fake data. It reuses the existing stored profile,
+demo route gate, and shared site header.
 
 ### Local Setup After Updating
 
@@ -79,11 +79,9 @@ import error remains outside this feature's scope.
 	accept the offer, accept the incoming request in the second account, then mark the
 	accepted match completed. Refresh both accounts and check their history.
 
-**Known sign-in blocker:** the existing sign-in page calls `startDemoSession` without
-importing it. Its owner needs to resolve that separately before reliable returning-user
-sign-in and a clean full frontend type-check. This feature does not modify authentication.
-The isolated browser checks below bypass sign-in only in a disposable test profile;
-they are not a replacement for a real two-account integration test.
+The upstream website update includes the missing `startDemoSession` import. The isolated
+browser checks below bypass sign-in only in a disposable test profile; they are not a
+replacement for a real two-account integration test.
 
 If Meetups reports that `Match.completed_at` does not exist, check the backend's
 configured database and migration status using its README. Regenerating the client
@@ -104,13 +102,26 @@ installs no packages. Start the frontend first; `MEETUPS_TEST_URL` overrides
 It checks completion, accept/decline, error/retry/empty states, contact links, and
 desktop/tablet/mobile layouts, and writes screenshots into a temporary directory.
 
+## Shared Navigation and Layout
+
+The root layout renders `src/app/site-header/site-header.tsx` on every page, including sign-in,
+registration, account setup and protected-page loading states. Keep navigation
+changes in that shared component rather than adding headers to individual pages.
+The current page is marked with `aria-current="page"` and an orange active style.
+Signed-in demo sessions show a sign-out button in place of sign-in/register links.
+
+The header, page containers and footer share the `--content-width` variable in
+`src/app/page.module.css`. Navigation wraps onto additional rows at smaller widths.
+The landing and meetups pages use full-width sage call-to-action banners whose
+inner content aligns with the page container.
+
 ## API Client Configuration
 
 Requests to the backend go through the shared axios instance in `src/lib/api.ts`. The base URL defaults to `http://localhost:5000/api` and can be overridden with `NEXT_PUBLIC_API_URL` in `.env.local`. The backend must allow this frontend's origin through its `CORS_ORIGIN` setting.
 
 ## Sign-In
 
-The `/sign-in` page asks for a PA work email first and sends it to `POST /api/people/check-email`. If the response is `{ registered: true }`, a password field appears. Otherwise the user is sent to `/setup-existing-user`. The password is checked with `POST /api/people/login`. On success, the returned person (without the password hash) is stored in `sessionStorage` under `coffee-connect-person` and the temporary demo marker is set for the existing route gates. The user is sent to `/home`, or to `/interests` or `/meetups` if that route was requested through the `next` query parameter. Failed sign-ins do not grant access or redirect. This is temporary until proper sessions are added.
+The `/sign-in` page asks for a PA work email first and sends it to `POST /api/people/check-email`. If the response is `{ registered: true }`, a password field appears. Otherwise the user is sent to `/setup-existing-user`. The password is checked with `POST /api/people/login`. On success, the returned person (without the password hash) is stored in `sessionStorage` under `coffee-connect-person` and the temporary demo marker is set for the existing route gates. The user is sent to `/home`, or to `/interests`, `/meetups` or `/spinwheel` if that route was requested through the `next` query parameter. Failed sign-ins do not grant access or redirect. This is temporary until proper sessions are added.
 
 ## Interests
 

@@ -4,7 +4,7 @@
   --paper: #f7f8f3;
   --orange: #b9502b;
   --muted: #68695f;
-  min-height: 100vh;
+  min-height: 0;
   color: #353e30;
   background: var(--paper);
   font-family: var(--font-geist-sans), sans-serif;
@@ -123,20 +123,26 @@
 .feedback a { color: var(--orange); }
 .error { color: #9b351f; }
 .error button { margin-top: 0.5rem; padding: 0.35rem 0; border: 0; color: inherit; background: transparent; text-decoration: underline; }
-.upcoming { background: #eaf0e2; }
-.sectionInner { padding-block: 1.5rem 3.5rem; }
-.past .sectionInner { padding-top: 2rem; }
-.sectionHeading { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.75rem; }
-.sectionHeading h2 { margin: 0; color: var(--sage-ink); font-size: 1.8rem; line-height: 1.25; }
-.count { color: var(--muted); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.notice { color: var(--sage-ink); font-size: 0.9rem; }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.75rem;
+.sectionHeading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.sectionHeading h2 {
   margin: 0;
-  padding: 0;
-  list-style: none;
+  color: var(--sage-ink);
+  font-size: 1.2rem;
+}
+
+.sectionHeading > span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .card { min-width: 0; padding: 1.5rem; border: 1px solid #edf0e7; border-radius: 20px; background: #fffffc; }
@@ -200,26 +206,6 @@
 .placeholder { display: grid; align-content: center; justify-items: start; gap: 0.75rem; min-height: 10rem; padding-block: 1rem; color: var(--muted); }
 .empty h3 { margin: 0; font-size: 1rem; font-weight: 500; }
 .empty a { color: var(--orange); font-size: 0.85rem; text-underline-offset: 0.3em; }
-.ctaBand { padding-bottom: 1.5rem; }
-
-.cta {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  min-height: 10rem;
-  padding: 2rem;
-  border-radius: 20px;
-  color: #fff;
-  background: var(--sage);
-}
-
-.cta > div { margin-right: auto; }
-.cta h2 { margin: 0; color: #fff; font-size: 1.65rem; line-height: 1.3; }
-.cta p { margin-top: 0.5rem; color: #fff; font-size: 0.85rem; }
-.cta > a { display: inline-flex; align-items: center; justify-content: center; flex: none; gap: 0.75rem; min-height: 2.9rem; padding: 0.7rem 1.4rem; border-radius: 999px; color: #fff; background: var(--orange); font-size: 0.8rem; font-weight: 650; text-decoration: none; }
-.cta > a:hover { background: #9f4122; }
-.footer { padding-block: 0.25rem 1.5rem; color: var(--muted); font-size: 0.7rem; }
-
 @media (prefers-reduced-motion: no-preference) {
   .card { animation: appear 300ms ease-out both; }
   @keyframes appear {
@@ -228,28 +214,10 @@
   }
 }
 
-@media (max-width: 1000px) {
-  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
 @media (max-width: 640px) {
-  .headerInner,
   .titleRow,
-  .sectionInner,
-  .feedback,
-  .ctaBand,
-  .footer { width: calc(100% - 2.5rem); }
-  .headerInner { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem; padding-block: 1.25rem; }
-  .brand { font-size: 1rem; }
-  .nav { grid-row: 2; grid-column: 1 / -1; gap: 1.75rem; }
-  .sessionAction { grid-column: 2; grid-row: 1; }
-  .sessionAction button { padding-inline: 1rem; }
+  .feedback { width: 100%; }
   .titleRow { padding-block: 2rem; }
   .titleRow h1 { font-size: 2rem; }
-  .sectionHeading h2 { font-size: 1.5rem; }
-  .grid { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
-  .sectionInner { padding-bottom: 2rem; }
   .avatar { margin-top: 1rem; }
-  .cta { align-items: flex-start; flex-direction: column; padding: 1.5rem; }
-  .cta h2 { font-size: 1.4rem; }
 }
