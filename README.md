@@ -22,10 +22,10 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Page Routes
 
-- `/`: Homepage with sign-in and registration choices.
+- `/`: Main homepage, with a personalised welcome for signed-in users.
 - `/sign-in`: Two-step sign-in (email, then password), with a link to registration.
 - `/setup-existing-user`: Placeholder for people whose account is not registered yet.
-- `/home`: Placeholder landing page after a successful sign-in.
+- `/home`: Redirects to `/` for compatibility with older links.
 - `/register`: Registration form; valid inputs continue to `/interests` without creating an account yet.
 - `/interests`: Offline interest selection, with a link back to `/register`.
 
@@ -60,7 +60,7 @@ Requests to the backend go through the shared axios instance in `src/lib/api.ts`
 
 ## Sign-In
 
-The `/sign-in` page asks for a PA work email first and sends it to `POST /api/people/check-email`. If the response is `{ registered: true }`, a password field appears. Otherwise the user is sent to `/setup-existing-user`. The password is checked with `POST /api/people/login`. On success, the returned person (without the password hash) is stored in `sessionStorage` under `coffee-connect-person` and the temporary demo marker is set for the existing route gates. The user is sent to `/home`, or to `/interests`, `/meetups` or `/spinwheel` if that route was requested through the `next` query parameter. Failed sign-ins do not grant access or redirect. This is temporary until proper sessions are added.
+The `/sign-in` page asks for a PA work email first and sends it to `POST /api/people/check-email`. If the response is `{ registered: true }`, a password field appears. Otherwise the user is sent to `/setup-existing-user`. The password is checked with `POST /api/people/login`. On success, the returned person (without the password hash) is stored in `sessionStorage` under `coffee-connect-person` and the temporary demo marker is set for the existing route gates. The user is sent to `/`, where the homepage shows `Welcome, <first name>`, or to `/interests`, `/meetups` or `/spinwheel` if that route was requested through the `next` query parameter. Saving interests also returns to `/`. The personalised welcome is hidden for signed-out users. Failed sign-ins do not grant access or redirect. This is temporary until proper sessions are added.
 
 For existing accounts awaiting setup, `/setup-existing-user` asks for the user's 5-digit ID and checks it against the email using `POST /api/people/verify-setup-identity`. Only a successful match reveals the password form. Password creation submits both the email and user ID to `POST /api/people/set-password`, which checks the match again before saving.
 
