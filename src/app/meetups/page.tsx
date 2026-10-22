@@ -309,6 +309,7 @@ function BookingPanel({ booking, personId, colleagueName, disabled, onPropose, o
   const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [dateError, setDateError] = useState("");
   const active = booking?.proposals.find((proposal) => proposal.status === "OPEN") ?? null;
   const awaitingColleague = Boolean(active && active.proposed_by === personId);
   const scheduledAt = booking?.status === "CONFIRMED" ? booking.scheduled_at : null;
@@ -386,9 +387,18 @@ function BookingPanel({ booking, personId, colleagueName, disabled, onPropose, o
         <div className={styles.bookingComposer}>
           <label className={styles.bookingDate}>
             <span>Choose a date</span>
-            <input type="date" min={getLondonDateKey(new Date())} value={selectedDate} onChange={(event) => setSelectedDate(event.target.value)} disabled={disabled || saving} />
+            <input type="date" min={getLondonDateKey(new Date())} value={selectedDate} onChange={(event) => {
+              const nextDate = event.target.value;
+              if (!isLondonWeekday(nextDate)) {
+                setDateError("Choose a weekday. Weekend bookings are not available.");
+                return;
+              }
+              setDateError("");
+              setSelectedDate(nextDate);
+            }} disabled={disabled || saving} aria-describedby="booking-date-guidance" />
           </label>
-          <p className={styles.bookingGuidance}>30-minute windows start every 15 minutes, 09:00–16:30 UK time. Availability is confirmed by the other person, not checked against a calendar.</p>
+          <p className={styles.bookingGuidance} id="booking-date-guidance">Weekdays only. 30-minute windows start every 15 minutes, 09:00–16:30 UK time. Availability is confirmed by the other person, not checked against a calendar.</p>
+          {dateError && <p className={styles.error} role="alert">{dateError}</p>}
           <div className={styles.bookingTimes} role="group" aria-label="Available start times in UK time">
             {BOOKING_TIMES.map((time) => {
               const slot = londonSlotToIso(selectedDate, time);
@@ -411,4 +421,11 @@ function BookingPanel({ booking, personId, colleagueName, disabled, onPropose, o
       {error && !calendarOpen && <p className={styles.error} role="alert">{error}</p>}
     </section>
   );
+}
+
+function isLondonWeekday(date: string): boolean {
+  const [year, month, day] = date.split("-").map(Number);
+  if (!year || !month || !day) return false;
+  const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+  return weekday !== 0 && weekday !== 6;
 }

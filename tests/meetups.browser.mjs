@@ -316,6 +316,9 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
       await waitFor(`${upcoming}.querySelectorAll('article').length === 4`);
       await click("Propose times", upcoming);
       assert.ok(await evaluate(`${upcoming}.innerText.includes('Choose a date')`));
+      await evaluate(`(() => { const input = document.querySelector('input[type="date"]'); const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set; setter.call(input, '2026-10-24'); input.dispatchEvent(new Event('input', { bubbles: true })); input.dispatchEvent(new Event('change', { bubbles: true })); })()`);
+      await waitFor(`document.querySelector('[role="alert"]')?.textContent.includes('Weekend bookings are not available')`);
+      assert.equal(await evaluate(`document.querySelector('input[type="date"]').value`), "2026-10-20");
       await evaluate(`Promise.all(document.getAnimations().map(animation => animation.finished))`);
       await evaluate("document.querySelector('nextjs-portal')?.remove()");
       const desktopCalendar = await send("Page.captureScreenshot", { format: "png", captureBeyondViewport: true });
