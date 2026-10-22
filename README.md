@@ -44,8 +44,8 @@ their colleague. Accepted matches can be marked completed by either participant
 after a confirmation step. The history shows the confirmation date, colleague
 details, shared interests, and Email/Teams links. These links open the chosen app;
 they do not send messages or inspect Teams call logs. Once both participants accept
-a match, either may propose up to eight 30-minute booking options between 09:00 and
-16:30 UK time, starting every 15 minutes. The recipient may confirm one option or
+a match, either may propose up to eight 30-minute weekday booking options between
+09:00 and 16:30 UK time, starting every 15 minutes. The recipient may confirm one option or
 counter with a new set. No external calendar availability is checked, and no
 calendar event, email, or Teams notification is sent.
 The booking-calendar browser screenshots are committed under `docs/screenshots/`.
