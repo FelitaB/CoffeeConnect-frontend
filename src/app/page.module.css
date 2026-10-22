@@ -1459,6 +1459,7 @@ button.backLink {
 .meetupsMain {
   display: block;
   width: var(--content-width);
+  margin: 0 auto;
   padding: 2.5rem 0 1.5rem;
 }
 
@@ -1492,10 +1493,9 @@ button.backLink {
   position: relative;
   left: 50%;
   width: 100vw;
-  margin: 0;
+  margin: 0 0 0 -50vw;
   padding: 1.5rem 0 1.8rem;
   background: var(--sage-pale);
-  transform: translateX(-50%);
 }
 
 .meetupBandInner {
@@ -1591,10 +1591,6 @@ button.backLink {
   }
 
   .stepsPanel {
-    margin-inline: 0;
-  }
-
-  .meetupSection {
     margin-inline: 0;
   }
 
