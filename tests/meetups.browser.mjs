@@ -82,11 +82,17 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
     interests: [{ id: 1, name: "Coffee and cafes" }, { id: 2, name: "Board games" }],
   });
   const me = person(10001, "Test");
-  const entry = (id, colleague, status = "ACCEPTED", direction = "outgoing", completedAt = null) => ({
-    id, colleague, status, direction, matched_at: "2026-10-19T12:00:00Z", completed_at: completedAt,
+  const entry = (id, colleague, status = "ACCEPTED", direction = "outgoing", completedAt = null, booking = null) => ({
+    id, colleague, status, direction, matched_at: "2026-10-19T12:00:00Z", completed_at: completedAt, booking,
   });
   const initial = [
-    entry(1, person(10002, "Amelia")),
+    entry(1, person(10002, "Amelia"), "ACCEPTED", "outgoing", null, {
+      id: 101, status: "PROPOSED", scheduled_at: null, confirmed_at: null,
+      proposals: [{ id: 201, status: "OPEN", proposed_by: 10002, proposer: person(10002, "Amelia"), created_at: "2026-10-20T12:00:00Z", slots: [
+        { id: 301, starts_at: "2027-01-12T09:00:00.000Z" },
+        { id: 302, starts_at: "2027-01-12T09:15:00.000Z" },
+      ] }],
+    }),
     entry(2, person(10003, "Daniel"), "PENDING", "incoming"),
     entry(3, person(10004, "Morgan"), "PENDING"),
     entry(4, person(10005, "Priya"), "ACCEPTED", "incoming", "2026-10-18T12:00:00Z"),
@@ -97,6 +103,11 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
   let failLoad = false;
   let failAction = false;
   let completionPosts = 0;
+  let bookingProposalPosts = 0;
+  let bookingAcceptPosts = 0;
+  let lastProposedSlots = [];
+  let nextBookingProposalId = 500;
+  let nextBookingSlotId = 800;
   const browserErrors = [];
   const interceptionErrors = [];
 
@@ -108,6 +119,13 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
     listeners.set("Runtime.exceptionThrown", [(event) => browserErrors.push(event.exceptionDetails.text)]);
     await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
     await send("Page.addScriptToEvaluateOnNewDocument", { source: `
+      const NativeDate = Date;
+      const fixedNow = "2026-10-20T10:00:00.000Z";
+      class TestDate extends NativeDate {
+        constructor(...args) { super(...(args.length ? args : [fixedNow])); }
+        static now() { return new NativeDate(fixedNow).getTime(); }
+      }
+      window.Date = TestDate;
       sessionStorage.setItem('coffee-connect-person', ${JSON.stringify(JSON.stringify(me))});
       sessionStorage.setItem('coffee-connect-demo-session', 'active');
     ` });
@@ -122,6 +140,43 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
         } else if (url.pathname.endsWith("/meetups")) {
           if (failLoad) { responseCode = 503; body = { message: "Meetups unavailable for this test." }; }
         } else {
+          const bookingRoute = url.pathname.match(/\/people\/(\d+)\/matches\/(\d+)\/booking\/(propose|accept)$/);
+          if (bookingRoute) {
+            const personId = Number(bookingRoute[1]);
+            const matchId = Number(bookingRoute[2]);
+            const action = bookingRoute[3];
+            const meetup = entries.find((item) => item.id === matchId);
+            if (failAction) {
+              responseCode = 409;
+              body = { message: "This booking is no longer available." };
+            } else if (action === "propose") {
+              bookingProposalPosts++;
+              const payload = JSON.parse(event.request.postData ?? "{}");
+              lastProposedSlots = payload.slots;
+              const booking = meetup.booking ?? { id: matchId + 1000, status: "PROPOSED", scheduled_at: null, confirmed_at: null, proposals: [] };
+              booking.proposals = booking.proposals.map((proposal) => proposal.status === "OPEN" ? { ...proposal, status: "SUPERSEDED" } : proposal);
+              const proposer = person(personId, personId === me.id ? "Test" : meetup.colleague.first_name, personId === me.id ? "Example" : meetup.colleague.last_name);
+              booking.proposals.unshift({ id: nextBookingProposalId++, status: "OPEN", proposed_by: personId, proposer, created_at: "2026-10-21T12:00:00Z", slots: payload.slots.map((starts_at) => ({ id: nextBookingSlotId++, starts_at })) });
+              meetup.booking = booking;
+              body = booking;
+            } else {
+              bookingAcceptPosts++;
+              const payload = JSON.parse(event.request.postData ?? "{}");
+              const booking = meetup.booking;
+              const proposal = booking?.proposals.find((item) => item.status === "OPEN");
+              const slot = proposal?.slots.find((item) => item.id === payload.slot_id);
+              if (!proposal || !slot || proposal.proposed_by === personId) {
+                responseCode = 409;
+                body = { message: "This booking is no longer available." };
+              } else {
+                proposal.status = "ACCEPTED";
+                booking.status = "CONFIRMED";
+                booking.scheduled_at = slot.starts_at;
+                booking.confirmed_at = "2026-10-21T12:05:00Z";
+                body = booking;
+              }
+            }
+          } else {
           const matched = url.pathname.match(/\/matches\/(\d+)\/(accept|decline|complete)$/);
           if (!matched) throw new Error(`Unexpected API call: ${url.pathname}`);
           const id = Number(matched[1]);
@@ -140,6 +195,7 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
             completionPosts++;
             meetup.completed_at = "2026-10-20T12:00:00Z";
             body = meetup;
+          }
           }
         }
         await send("Fetch.fulfillRequest", {
@@ -171,6 +227,7 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
       assert.equal(await evaluate(`${past}.querySelectorAll('article').length`), 3);
       assert.equal(await evaluate(`${past}.querySelector('h3').textContent`), "Priya Example");
       assert.ok(await evaluate(`${upcoming}.textContent.includes('Coffee and cafes, Board games')`));
+      assert.ok(!(await evaluate(`${upcoming}.querySelectorAll('article')[1].textContent.includes('Book a time')`)));
       assert.equal(await evaluate(`document.querySelector('a[aria-label="Email Priya Example"]').getAttribute('href')`), "mailto:priya@example.test");
       assert.equal(await evaluate(`document.querySelector('a[aria-label^="Open Teams chat with Priya"]').getAttribute('href')`), "https://teams.microsoft.com/l/chat/0/0?users=priya%40example.test");
       assert.ok(!(await evaluate(`document.body.textContent`)).includes("&nearr;"));
@@ -193,6 +250,15 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
       writeFileSync(join(artifacts, "desktop.png"), Buffer.from(image.data, "base64"));
     });
 
+    await context.test("the recipient can accept one of several proposed booking times", async () => {
+      await click("Accept time", upcoming);
+      await waitFor(`${upcoming}.textContent.includes('Confirmed:')`);
+      assert.equal(bookingAcceptPosts, 1);
+      const booking = entries.find((item) => item.id === 1).booking;
+      assert.equal(booking.status, "CONFIRMED");
+      assert.equal(booking.scheduled_at, "2027-01-12T09:00:00.000Z");
+    });
+
     await context.test("completion requires confirmation, supports cancel, and moves the card into history", async () => {
       await click("Mark as completed", upcoming);
       assert.equal(completionPosts, 0);
@@ -211,6 +277,8 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
     await context.test("incoming pending matches can be accepted or declined", async () => {
       await click("Accept match", upcoming);
       await waitFor(`${upcoming}.textContent.includes('Mark as completed')`);
+      const acceptedCard = await evaluate(`Array.from(${upcoming}.querySelectorAll('article')).find(article => article.querySelector('h3')?.textContent === 'Daniel Example')?.innerText`);
+      assert.ok(acceptedCard.includes("Propose times"), acceptedCard);
       assert.equal(entries.find((item) => item.id === 2).status, "ACCEPTED");
       entries.push(entry(7, person(10008, "Taylor"), "PENDING", "incoming"));
       await click("Refresh");
@@ -241,6 +309,64 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
       assert.equal(await evaluate(`document.querySelectorAll('article').length`), 0);
     });
 
+    await context.test("accepted matches can propose multiple times and the other person can counter", async () => {
+      entries = structuredClone(initial);
+      entries.push(entry(8, person(10008, "Taylor"), "ACCEPTED", "incoming"));
+      await click("Refresh");
+      await waitFor(`${upcoming}.querySelectorAll('article').length === 4`);
+      await click("Propose times", upcoming);
+      assert.ok(await evaluate(`${upcoming}.innerText.includes('Choose a date')`));
+      await evaluate(`(() => { const input = document.querySelector('input[type="date"]'); const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set; setter.call(input, '2026-10-24'); input.dispatchEvent(new Event('input', { bubbles: true })); input.dispatchEvent(new Event('change', { bubbles: true })); })()`);
+      await waitFor(`document.querySelector('[role="alert"]')?.textContent.includes('Weekend bookings are not available')`);
+      assert.equal(await evaluate(`document.querySelector('input[type="date"]').value`), "2026-10-20");
+      await evaluate(`Promise.all(document.getAnimations().map(animation => animation.finished))`);
+      await evaluate("document.querySelector('nextjs-portal')?.remove()");
+      const desktopCalendar = await send("Page.captureScreenshot", { format: "png", captureBeyondViewport: true });
+      writeFileSync(join(artifacts, "booking-calendar-desktop.png"), Buffer.from(desktopCalendar.data, "base64"));
+      await send("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: false });
+      const mobileCalendar = await send("Page.captureScreenshot", { format: "png", captureBeyondViewport: true });
+      writeFileSync(join(artifacts, "booking-calendar-mobile.png"), Buffer.from(mobileCalendar.data, "base64"));
+      await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
+      const offeredTimes = await evaluate(`Array.from(document.querySelectorAll('[aria-label="Available start times in UK time"] button')).map(button => button.textContent)`);
+      assert.equal(offeredTimes.length, 31);
+      assert.equal(offeredTimes[0], "09:00");
+      assert.equal(offeredTimes.at(-1), "16:30");
+      const choices = await evaluate(`Array.from(document.querySelectorAll('[aria-label="Available start times in UK time"] button')).filter(button => !button.disabled).slice(0, 2).map(button => button.textContent)`);
+      assert.equal(choices.length, 2);
+      for (const choice of choices) await click(choice, "document.querySelector('[aria-label=\"Available start times in UK time\"]')");
+      await click("Send time options", upcoming);
+      await waitFor(`${upcoming}.textContent.includes('Your proposed times are with Taylor Example')`);
+      const countered = entries.find((item) => item.id === 8);
+      assert.equal(bookingProposalPosts, 1);
+      assert.equal(lastProposedSlots.length, 2);
+      assert.deepEqual(lastProposedSlots, ["2026-10-20T10:15:00.000Z", "2026-10-20T10:30:00.000Z"]);
+      assert.equal(countered.booking.proposals[0].proposed_by, me.id);
+
+      const firstProposal = countered.booking.proposals[0];
+      firstProposal.status = "SUPERSEDED";
+      countered.booking.proposals.unshift({
+        id: 999, status: "OPEN", proposed_by: countered.colleague.id, proposer: countered.colleague,
+        created_at: "2026-10-21T13:00:00Z", slots: [
+          { id: 998, starts_at: "2027-01-15T10:00:00.000Z" },
+          { id: 997, starts_at: "2027-01-15T10:15:00.000Z" },
+        ],
+      });
+      await click("Refresh");
+      await waitFor(`${upcoming}.textContent.includes('Propose different times')`);
+      const taylorCard = `Array.from(${upcoming}.querySelectorAll('article')).find(article => article.querySelector('h3')?.textContent === 'Taylor Example')`;
+      await click("Propose different times", taylorCard);
+      const counterChoices = await evaluate(`Array.from(document.querySelectorAll('[aria-label="Available start times in UK time"] button')).filter(button => !button.disabled).slice(0, 2).map(button => button.textContent)`);
+      assert.equal(counterChoices.length, 2);
+      for (const choice of counterChoices) await click(choice, "document.querySelector('[aria-label=\"Available start times in UK time\"]')");
+      await click("Send time options", taylorCard);
+      await waitFor(`${upcoming}.textContent.includes('Your proposed times are with Taylor Example') || document.querySelector('[role="alert"]')`);
+      const counterState = await evaluate(`${upcoming}.innerText`);
+      assert.ok(counterState.includes("Your proposed times are with Taylor Example"), counterState);
+      assert.equal(bookingProposalPosts, 2);
+      assert.equal(firstProposal.status, "SUPERSEDED");
+      assert.equal(countered.booking.proposals[0].proposed_by, me.id);
+    });
+
     await context.test("mobile and tablet layouts fit long names, emails, expanded profiles, and confirmations", async () => {
       entries = structuredClone(initial);
       entries[0].colleague.first_name = "Alexandertheverylongfirstname";
@@ -265,6 +391,14 @@ test("meetups workflow and responsive layout using isolated browser fixtures", {
           writeFileSync(join(artifacts, "mobile.png"), Buffer.from(image.data, "base64"));
         }
       }
+      await send("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: false });
+      const firstArticle = `${upcoming}.querySelector('article')`;
+      await click("Propose different times", firstArticle);
+      await waitFor(`${upcoming}.textContent.includes('Choose a date')`);
+      await evaluate(`Promise.all(document.getAnimations().map(animation => animation.finished))`);
+      const image = await send("Page.captureScreenshot", { format: "png", captureBeyondViewport: true });
+      writeFileSync(join(artifacts, "booking-calendar-mobile.png"), Buffer.from(image.data, "base64"));
+      await click("Hide alternatives", firstArticle);
       await click("Mark as completed", upcoming);
       await waitFor(`${upcoming}.textContent.includes('Has your call')`);
       assert.ok(await evaluate(`document.documentElement.scrollWidth <= innerWidth`));

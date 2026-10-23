@@ -29,7 +29,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 - `/register`: Creates a profile, sets a password, and continues to `/interests`.
 - `/interests`: Saves 3 to 10 interests through the backend API.
 - `/spinwheel`: Requests a database-backed match and accepts or declines the offer.
-- `/meetups`: Pending and accepted matches, completion confirmation, and call history.
+- `/meetups`: Pending and accepted matches, booking proposals, completion confirmation, and call history.
 
 The CoffeeConnect brand link on each page returns to `/`.
 
@@ -38,14 +38,20 @@ The CoffeeConnect brand link on each page returns to `/`.
 `/meetups` uses real account-specific Match records from the backend rather than
 hard-coded sample people. The page follows the current sage-green website design
 and uses its shared navigation, with Upcoming and Past Meetups, responsive
-colleague cards, and a spin action.
+colleague cards, booking controls, and a spin action.
 Pending matches show whether the signed-in person needs to respond or is awaiting
 their colleague. Accepted matches can be marked completed by either participant
 after a confirmation step. The history shows the confirmation date, colleague
 details, shared interests, and Email/Teams links. These links open the chosen app;
-they do not send messages or inspect Teams call logs. There is no scheduling UI.
+they do not send messages or inspect Teams call logs. Once both participants accept
+a match, either may propose up to eight 30-minute weekday booking options between
+09:00 and 16:30 UK time, starting every 15 minutes. The recipient may confirm one option or
+counter with a new set. No external calendar availability is checked, and no
+calendar event, email, or Teams notification is sent.
+The booking-calendar browser screenshots are committed under `docs/screenshots/`.
 
-The backend must have the `add_match_completion` migration applied to its
+The backend must have the `add_match_completion` and `add_booking_proposals`
+migrations applied to its
 intended database before these endpoints can be used. Branches do not isolate
 databases; do not migrate a shared database just to preview this page. Until then,
 the page shows a request error, not fake data. It reuses the existing stored profile,
@@ -54,7 +60,7 @@ demo route gate, and shared site header.
 ### Local Setup After Updating
 
 1. Obtain the corresponding backend changes as well as the frontend changes. The
-	updated frontend requires the new backend endpoints and completion column.
+	updated frontend requires the new backend endpoints and both database migrations.
 2. Follow **Update An Existing Local Database** in the backend README first. That
 	checklist covers a private backup, migration review, client generation, and API
 	startup. Do not reset or reseed an existing database for this feature.
@@ -76,8 +82,9 @@ demo route gate, and shared site header.
 6. Open `http://localhost:3000/meetups` using the existing sign-in flow. Accounts with
 	no matches should show empty Upcoming and Past Meetups sections, not sample people.
 	Use two registered accounts against the same backend to test the full flow: spin,
-	accept the offer, accept the incoming request in the second account, then mark the
-	accepted match completed. Refresh both accounts and check their history.
+	accept the offer, accept the incoming request in the second account, propose multiple
+	booking options, confirm one as the recipient, then mark the call completed. Refresh
+	both accounts and check the confirmed time and call history.
 
 The isolated browser checks below bypass sign-in only in a disposable test profile; they
 are not a replacement for a real two-account integration test.
@@ -98,8 +105,9 @@ The browser test uses installed Chrome, a disposable profile, test-only session
 values, and intercepted API responses. It does not use or modify the database and
 installs no packages. Start the frontend first; `MEETUPS_TEST_URL` overrides
 `http://localhost:3000`, and `CHROME_PATH` overrides the default macOS Chrome path.
-It checks completion, accept/decline, error/retry/empty states, contact links, and
-desktop/tablet/mobile layouts, and writes screenshots into a temporary directory.
+It checks match acceptance, booking proposals and counters, slot confirmation, call
+completion, error/retry/empty states, contact links, and desktop/tablet/mobile
+layouts, and writes screenshots into a temporary directory.
 
 ## Shared Components
 
