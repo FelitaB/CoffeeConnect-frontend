@@ -61,7 +61,7 @@ export default function SignInPage() {
       setPassword("");
       setShowPassword(false);
       const nextPath = new URLSearchParams(window.location.search).get("next");
-      router.push(nextPath === "/interests" || nextPath === "/meetups" || nextPath === "/spinwheel" ? nextPath : "/home");
+      router.push(nextPath === "/interests" || nextPath === "/meetups" || nextPath === "/spinwheel" ? nextPath : "/");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         setPassword("");

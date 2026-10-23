@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HomeWelcome from "@/components/home-welcome";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
         <section className={styles.homeHero} aria-labelledby="home-heading">
           <div className={styles.homeHeroCopy}>
             <p className={styles.homeEyebrow}>COFFEE CONNECT · PA CONSULTING</p>
+            <HomeWelcome />
             <h1 id="home-heading">Good coffee.<br />Great conversations.</h1>
             <p className={styles.homeLead}>
               Meet colleagues beyond your usual circle. Find common ground,

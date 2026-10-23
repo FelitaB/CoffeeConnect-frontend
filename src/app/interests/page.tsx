@@ -83,7 +83,7 @@ function InterestsPageContent() {
       const updatedPerson = await saveInterests(person, selectedInterestIds);
       storePerson(updatedPerson);
       setError("");
-      router.replace("/home");
+      router.replace("/");
     } catch {
       setError("Unable to save your interests. Please try again.");
     } finally {
